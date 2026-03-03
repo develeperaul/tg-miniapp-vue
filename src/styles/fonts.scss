@@ -1,0 +1,40 @@
+@mixin inter {
+  $path: "../assets/fonts/inter";
+
+  @font-face {
+    font-family: "Inter";
+    src: url(#{$path}/Inter-Regular.eot);
+    src: local("Inter Regular"), local("Inter-Regular"),
+      url(#{$path}/Inter-Regular.eot?#iefix) format("embedded-opentype"),
+      
+      url(#{$path}/Inter-Regular.woff) format("woff"),
+      url(#{$path}/Inter-Regular.ttf) format("ttf");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url(#{$path}/Inter-SemiBold.eot);
+    src: local("Inter Bold"), local("Inter-Bold"),
+      url(#{$path}/Inter-SemiBold.eot?#iefix) format("embedded-opentype"),
+      
+      url(#{$path}/Inter-SemiBold.woff) format("woff"),
+      url(#{$path}/Inter-SemiBold.ttf) format("ttf");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    src: url(#{$path}/Inter-Medium.eot);
+    src: local("Inter Medium"), local("Inter-Medium"),
+      url(#{$path}/Inter-Medium.eot?#iefix) format("embedded-opentype"),
+      // url(#{$path}/Inter-Medium.woff) format("woff"),
+      url(#{$path}/Inter-Medium.ttf) format("ttf");
+    font-weight: 500;
+    font-style: normal;
+  }
+}
+
+@include inter();
