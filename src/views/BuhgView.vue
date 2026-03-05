@@ -11,7 +11,8 @@
                 Запрос номера УПД
               </div>
               <div class="item-link__text">
-                Здесь описание - консультация с <br> широким активом представляет <br> собой интересный эксперимент.
+                Запрос номера УПД <br> бумажного или оплаченного формата.
+                <!-- Здесь описание - консультация с <br> широким активом представляет <br> собой интересный эксперимент. -->
               </div>
             </div>
             <img class="item-link__bg" src="/create-order.png" alt="">  
@@ -22,19 +23,19 @@
                 Написать сообщение
               </div>
               <div class="item-link__text">
-                Перейти в диалоги
+                Перейти в диалог c бухгалтером
               </div>
             </div>
             <img class="item-link__bg" src="/pen.png" alt="">  
           </div>
-          <router-link :to="{name:'Form1', params:{ title: 'Подписать документы',type: 'doc'}}" class="item-link">
+          <router-link :to="{name:'PodisForm',}" class="item-link">
 
             <div class=" item-link__content">
               <div class="item-link__title">
                 Подписать документы
               </div>
               <div class="item-link__text">
-                Описание
+                Загрузить документы на подпись
               </div>
             </div>
             <img class="item-link__bg" src="/podpis.png" alt="">  

@@ -11,7 +11,7 @@
         <a v-if="linkFNS" :href=" linkFNS" class=" text-blue-500 underline text-center text-lg  " target="_blank">
            Ссылка для скачивания
          </a>
-         <FileTile v-else @fileLoad="handleFileLoad" />
+         <FileTile title="Прикрепите пожалуйста скан требования и мы выдадим вам ответ" v-else @fileLoad="handleFileLoad" />
         <div>
           <div class=" h2 mb-15">
             Активные чаты
@@ -118,7 +118,12 @@ async function handleFileLoad(f: File) {
       const res = await sendFNS(profile.value?.telegram_chat_id, f);
       
       
-      if (res.data.message.hasOwnProperty('media') && res.data.message.media) {
+      // if (res.data.message.hasOwnProperty('media') && res.data.message.media) {
+      //   linkFNS.value= res.data.message.media[0]?.url
+      // } else {
+      //   router.push({ name: 'Dialog', params: {uuid: res.data.uuid}})
+      // }
+      if (res.data.message.text === 'Готово!') {
         linkFNS.value= res.data.message.media[0]?.url
       } else {
         router.push({ name: 'Dialog', params: {uuid: res.data.uuid}})

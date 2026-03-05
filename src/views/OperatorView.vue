@@ -4,24 +4,26 @@
     <Card class="container   mt-3" title="Оператор">
       <div class=" grid gap-5">
         <div class=" grid gap-5">
-          <div @click="setOrder "   class="item-link">
+          <!-- <div @click="setOrder "   class="item-link"> -->
+          <router-link :to="{name:'Form1', params:{ title: 'Создать заявку', type: 'op'}}" class="item-link">
             <div class=" item-link__content">
               <div class="item-link__title">
                 Создать заявку
               </div>
               <div class="item-link__text">
-                Здесь описание - консультация с <br> широким активом представляет <br> собой интересный эксперимент.
+                Сформировать заявку с указанием суммы и темы оплаты.
+                <!-- Здесь описание - консультация с <br> широким активом представляет <br> собой интересный эксперимент. -->
               </div>
             </div>
             <img class="item-link__bg" src="/create-order.png" alt="">  
-          </div>
+          </router-link>
           <div class="item-link">
             <div class=" item-link__content" @click="toChat">
               <div class="item-link__title">
                 Написать сообщение
               </div>
               <div class="item-link__text">
-                Перейти в диалоги
+                Перейти в диалог с оператором.
               </div>
             </div>
             <img class="item-link__bg" src="/pen.png" alt="">  

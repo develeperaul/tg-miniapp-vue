@@ -4,7 +4,7 @@ import * as Tokens from './tokens'
 
 
 import { useNotifyStore } from '../stores/notifications' // путь к вашему стору
-
+import router  from "../router"
 export class Server {
   mainKy: KyInstance
   
@@ -46,6 +46,9 @@ export class Server {
                 notify.add(errorMessage, 'negative')
               } else if (response.status === 401) {
                 
+                
+                
+                router.push({ name: 'Auth' })
                 notify.add('Сессия истекла', 'warning')
               } else {
                 notify.add(errorMessage, 'negative')

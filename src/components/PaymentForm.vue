@@ -129,7 +129,7 @@ const { handleSubmit, setFieldValue, setFieldError } = useForm<{
 })
 
 // ───── ограничения по файлам ─────
-const MAX_SIZE =  1 * 1024 * 1024 // 20 МБ
+const MAX_SIZE =  20 * 1024 * 1024 // 20 МБ
 
 function isTooLarge(file: File) {
   return file.size > MAX_SIZE

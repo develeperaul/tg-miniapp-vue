@@ -17,10 +17,11 @@ import MainLayout from '../layouts/MainLayout.vue'
 import { useChatsStore } from '../stores/chats'
 import { getAccessToken } from '../api/tokens'
 import { useMainStore } from '../stores/main'
+import PodisForm from '../views/PodisForm.vue'
 const routes = [
   { path: '', name: 'Home', component: HomeView, meta: {auth: true} },
   { path: '/auth', name: 'Auth', component: AuthView },
-  { path: '/fns', name: 'FNS', component: FNS, meta: {auth: true} },
+  { path: '/fns', name: 'FNS', component: FNS,  meta: { type: 'lawyer',auth: true} },
   { path: '/dialogs', name: 'DialogsList', component: DialogsList, meta: {auth: true} },
   { path: '/dialogs/:uuid', props: true, name: 'Dialog', component: DialogView },
   {
@@ -34,6 +35,7 @@ const routes = [
     path: '/buhg', component: MainLayout, meta: { type: 'accountant', auth: true }, children: [
       { path: '', name: 'Buhg', component: BuhgView},
       { path: '/numb-upd', name: 'NumbUPD', component: NumbUPDView},
+      { path: '/podpis', name: 'PodisForm', component: PodisForm},
       // { path: 'buhg-form/:type', props: true, name: 'BuhgForm', component: BuhgForm },
       // { path: '/bum-upd', name: 'BumUPD', component: BumUPDView, meta: {type: 'accountant'} },
     

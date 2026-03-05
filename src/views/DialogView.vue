@@ -44,9 +44,33 @@
             : 'bg-[#E5F0FF] text-[#283048] '
           "
         >
-          <div v-for="value in m.media" class=" grid-cols-2">
-            <img style=" width: 50px; height: 50px; border-radius: 16px; overflow: hidden;"  :src="value.url" alt="">
-          </div>
+          <div v-for="value in m.media" :key="value.url" class="grid-cols-2">
+              <!-- Если это картинка -->
+              <img 
+                v-if="/\.(jpg|jpeg|png|webp|avif|gif)$/i.test(value.url)" 
+                :src="value.url" 
+                style="width: 50px; height: 50px; border-radius: 16px; object-fit: cover;" 
+                alt="Preview"
+              >
+              
+              <!-- Если это документ (svg иконка) -->
+              <div v-else style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 16px;">
+                <svg style="width: 100%; height: 100%;" viewBox="0 0 400 460" fill="none" xmlns="http://www.w3.org">
+        
+                    <path d="M60 20C37.9086 20 20 37.9086 20 60V400C20 422.091 37.9086 440 60 440H340C362.091 440 380 422.091 380 400V133.137C380 122.528 375.786 112.354 368.284 104.853L295.147 31.7157C287.646 24.2143 277.472 20 266.863 20H60Z" stroke="#231531" stroke-width="40" stroke-linejoin="round"/>
+                    
+                    
+                    <path d="M260 20V100C260 122.091 277.909 140 300 140H380" stroke="#231531" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    
+                    <text x="50%" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="110" fill="#231531">DOC</text>
+                  </svg>
+              </div>
+
+              <a :href="value.url" v-if="m.sender.type === 'bitrix'" class=" my-3 underline  text-blue-500 text-center text-sm" target="_blank">
+                Скачать
+              </a>
+            </div>
           <p class="text-[13px] leading-snug">
             {{ m.text }}
           </p>

@@ -13,8 +13,7 @@
         <div class=" h1 text-white ">
           Привет,
           <br/>
-          {{ store.profile ? store.profile?.name  : ''}}
-          Иван Иванов
+          {{ nameP }}
         </div>
         <div @click="logout" class=" text-white  w-[58px] h-[58px] rounded-full">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -31,12 +30,11 @@
           <div class=" h2 text-white">
             Обращения
           </div>
-          <div class=" underline txt-lg text-white">
+          <router-link   :to="{name:'DialogsList'}" class=" underline txt-lg text-white">
             Просмотреть
-          </div>
+          </router-link>
         </div>
         <div class=" grid gap-5">
-          
           <div  class=" grid grid-cols-2 gap-5">
             <router-link v-if="store.employeesKeys.value?.manager"  :to="{name:'Operator'}" class=" max-w-[160px] bg-white grid gap-2.5 rounded-[10px] overflow-hidden">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
@@ -64,11 +62,14 @@
           
           <div class=" flex  gap-5">
             
-            <router-link :to="{name:'FNS'}"   class=" tab " >
+            <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'FNS'}"   class=" tab " >
               Юрист
             </router-link>
             <div  v-if="store.employeesKeys.value?.economist" class=" tab " @click="startOtherChat(store.employeesKeys.value?.economist)" >
               Экономист
+            </div>
+            <div  v-if="store.employeesKeys.value?.reconciliation" class=" tab " @click="toChat(store.employeesKeys.value?.reconciliation)" >
+              Сверка
             </div>
             
           </div>
@@ -97,7 +98,7 @@ import { computed } from '@vue/reactivity';
 import { useChatsStore } from '../stores/chats';
 import { useRouter } from 'vue-router';
 import { cleanTokensData } from '../api/tokens';
-const { chats } = storeToRefs(useChatsStore())
+const { chats, messages } = storeToRefs(useChatsStore())
 const store = storeToRefs(useMainStore())
 const storeChat = useChatsStore()
 const objKeys = computed(() => {
@@ -120,11 +121,30 @@ const startOtherChat = async (uuid: string) => {
     store.load.value = false;
    }
 }
-
+const nameP = computed(() => {
+  if (store.profile.value) return store.profile.value.name
+  return ''
+})
 const logout = () => {
   cleanTokensData()
   store.profile.value = null;
   router.push({name:'Auth'})
+}
+
+const toChat = async (id:string) => {
+  if (store.currentEmpl) {
+    store.load.value = true
+    try {
+      messages.value = []
+      const chatsRes = (await chat(id)).data;
+        if (chatsRes.uuid) {
+          router.push({ name: 'Dialog', params: {uuid: chatsRes.uuid}})
+        }
+
+    } catch (e) { throw e }
+    finally {store.load.value = false}
+    
+  }
 }
 
   

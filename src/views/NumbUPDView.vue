@@ -6,25 +6,25 @@
 
         <div class=" grid grid-cols-2 gap-5">
           <router-link :to="{name:'Form1', params:{ title: 'Бумажный УПД',type: 'bum'}}" class="item-linkvert">
-            <img class="item-linkvert__bg" src="/bum.png" alt="">  
+            <img  class="item-linkvert__bg" src="/bum.png" alt="">  
             <div class=" item-linkvert__content">
               <div class="item-linkvert__title">
                 Бумажный
               </div>
-              <div class="item-linkvert__text">
+              <!-- <div class="item-linkvert__text">
                 Краткое описание
-              </div>
+              </div> -->
             </div>
           </router-link>
-          <router-link :to="{name:'Form1', params:{ title: 'Электронный УПД',type: 'opl'}}" class="item-linkvert">
+          <router-link :to="{name:'Form1', params:{ title: 'Оплаченный УПД',type: 'opl'}}" class="item-linkvert">
             <img class="item-linkvert__bg" src="/electr.png" alt="">  
             <div class=" item-linkvert__content">
               <div class="item-linkvert__title">
-                Электронный
+                Оплаченный
               </div>
-              <div class="item-linkvert__text">
+              <!-- <div class="item-linkvert__text">
                 Краткое описание
-              </div>
+              </div> -->
             </div>
           </router-link>
   

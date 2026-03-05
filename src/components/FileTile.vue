@@ -26,7 +26,18 @@
 
     <!-- контент -->
     <div v-if="noimg" class="file-img__url">
-      {{ url }}
+      <svg style="width: 100%; height: 100%;" viewBox="0 0 400 460" fill="none" xmlns="http://www.w3.org">
+        
+        <path d="M60 20C37.9086 20 20 37.9086 20 60V400C20 422.091 37.9086 440 60 440H340C362.091 440 380 422.091 380 400V133.137C380 122.528 375.786 112.354 368.284 104.853L295.147 31.7157C287.646 24.2143 277.472 20 266.863 20H60Z" stroke="#231531" stroke-width="40" stroke-linejoin="round"/>
+        
+        
+        <path d="M260 20V100C260 122.091 277.909 140 300 140H380" stroke="#231531" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        
+        <text x="50%" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="110" fill="#231531">DOC</text>
+      </svg>
+
+      <!-- {{ url }} -->
     </div>
     <template v-else>
       <img v-if="url" :src="url" alt="" />
@@ -68,7 +79,7 @@
       <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.24976 1.75993C8.24976 1.18806 8.47693 0.639616 8.8813 0.235244C9.15058 -0.0340385 9.91107 -0.0942015 10.1844 0.170928C10.206 0.191839 10.2278 0.21328 10.2498 0.235244C10.6541 0.639616 10.8813 1.18806 10.8813 1.75993V8.46537H17.1983C17.4814 8.46537 17.7618 8.52114 18.0234 8.6295C18.285 8.73786 18.5227 8.89669 18.723 9.09691C18.8835 9.4844 19.0173 9.93341 18.7457 10.253L18.723 10.2798C18.5227 10.48 18.285 10.6389 18.0234 10.7472C17.7618 10.8556 17.4814 10.9114 17.1983 10.9114H10.8813V17.1512C10.8813 17.7231 10.6541 18.2715 10.2498 18.6759C9.93953 18.9861 9.47791 19.1291 9.11939 18.8762C9.04033 18.8205 8.95969 18.7543 8.8813 18.6759C8.47693 18.2715 8.24976 17.7231 8.24976 17.1512V10.9114H1.80699C1.23512 10.9114 0.686674 10.6842 0.282302 10.2798C0.209118 10.2066 0.141738 10.1329 0.0804587 10.0612C-0.111286 9.83699 0.0736722 9.30554 0.282302 9.09691C0.686674 8.69254 1.23512 8.46537 1.80699 8.46537H8.24976V1.75993Z" fill="#242F9B"/>
       </svg>
-      <span class=" text-[#242F9B] text-[12.4px]">Документ</span>
+      <span class=" text-[#242F9B] text-[12.4px] text-center">{{ title }}</span>
 
     </div>
 
@@ -95,9 +106,10 @@ const props = withDefaults(
     url?: string
     noimg?: boolean
     loading?: boolean
-    other?: boolean
+    other?: boolean,
+    title?: string
   }>(),
-  { noimg: true, loading: false }
+  { noimg: true, loading: false, title: 'Документ' }
 )
 
 const fileInput = ref<HTMLInputElement | null>(null)
