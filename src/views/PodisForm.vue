@@ -4,7 +4,7 @@
     <Card class="container  mt-3" title=" Подписать документы">
       <div class=" grid   gap-5">
         
-        <DocsForm  @send="send"/>
+        <DocsForm btntitle="Отправить"  @send="send"/>
         <div>
           <div class=" h2 mb-15">
             Активные чаты

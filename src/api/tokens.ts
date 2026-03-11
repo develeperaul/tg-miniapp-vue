@@ -1,7 +1,9 @@
 const storage = window.localStorage
 
 function setTokensData(token: string, expires: number) {
-  storage.setItem('expiresIn', String((expires * 60) / 1000))
+  // storage.setItem('expiresIn', String((expires * 60) / 1000))
+  const expiresAt = Date.now() + (60 * 24 * 60 * 60 * 1000); 
+  storage.setItem('expiresIn', String(expiresAt));
   storage.setItem('token', token)
 }
 

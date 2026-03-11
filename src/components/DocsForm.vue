@@ -33,7 +33,7 @@
       class="w-full h-12 rounded-[999px] bg-[#242F9B] text-white font-bold text-sm  mt-4"
       :disabled="submitting"
     >
-      Перейти к диалогу
+      {{ btntitle }}
     </button>
   </form>
 </template>
@@ -52,7 +52,11 @@ type UiFile = {
   loading: boolean
   serverId?: string
 }
-
+const props = withDefaults(defineProps<
+  { btntitle?: string }
+> (), {
+  btntitle: 'Перейти к диалогу'
+})
 const emit = defineEmits<{
   (e: 'send', vals: any): void
 }>()
