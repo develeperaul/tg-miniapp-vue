@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
-
+import basicSsl from '@vitejs/plugin-basic-ssl'
 export default defineConfig({
   plugins: [vue(),
     VitePWA({
@@ -19,10 +19,12 @@ export default defineConfig({
           },
         ]
       }
-    })
+    }),
+    basicSsl()
   ],
   server: {
-    port: 5173
+    port: 5173,
+    host: true 
   },
   
 })

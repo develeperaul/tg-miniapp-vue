@@ -13,6 +13,7 @@ export type ChatT = {
   id: number,
   uuid: string,
   message: MessageT,
+  name: string
 }
 
 export type MessageT = {

@@ -338,10 +338,18 @@ function deleteAttachment(id: string) {
 // }
 
 const send = async () => {
+  
   const text = messageText.value.trim()
   // if (!text && !attachmentTiles.value.length) return
   const imgUrls = attachmentTiles.value.map(f => { return { uuid: f.serverId || '' } })
+  mainStore.load= true
+  try {
     await sendMess(props.uuid, { images: imgUrls, text })
+  } catch (e) {
+      throw e
+  } finally {
+      mainStore.load= false
+    }
     messageText.value = ''
     attachmentTiles.value = []
     storeChat.setMessgs(props.uuid)

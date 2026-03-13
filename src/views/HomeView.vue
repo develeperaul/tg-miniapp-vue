@@ -87,9 +87,11 @@
       </div>
     </div>
   </div>
+  <NotificationPrompt/>
 </template>
 
 <script setup lang="ts">
+import NotificationPrompt from '../components/NotificationPrompt.vue';
 import { chat } from '../api/chats';
   import { storeToRefs } from 'pinia';
 import SdelkaItem from '../components/SdelkaItem.vue';
@@ -98,6 +100,7 @@ import { computed } from '@vue/reactivity';
 import { useChatsStore } from '../stores/chats';
 import { useRouter } from 'vue-router';
 import { cleanTokensData } from '../api/tokens';
+import { usePinCode } from '../composables/usePinCode';
 const { chats, messages } = storeToRefs(useChatsStore())
 const store = storeToRefs(useMainStore())
 const storeChat = useChatsStore()
@@ -126,8 +129,10 @@ const nameP = computed(() => {
   return ''
 })
 const logout = () => {
+  const {resetPinOnLogout} = usePinCode()
   cleanTokensData()
   store.profile.value = null;
+  resetPinOnLogout()
   router.push({name:'Auth'})
 }
 

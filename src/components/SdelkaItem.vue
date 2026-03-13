@@ -1,6 +1,6 @@
 <template>
 <div @click="goMes" class=" sdelkaitem " :class="`sdelkaitem_${theme}`" >
-  <div class=" h2"> Чат №{{ chat.id }}
+  <div class=" h2"> Чат с {{ chat.name }}
   </div>
   <div v-if="chat.message">
    Дата создания {{ formatDate(chat.message.created_at) }}

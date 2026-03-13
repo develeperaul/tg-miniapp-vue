@@ -4,7 +4,13 @@
 import { type DataObj, type EmployeeT, type ProfileT } from '../models/api';
 import { api } from './index'
 
-
+export const setFRB =  (
+  token: string
+) => {
+  const body = new FormData()
+  body.append('token', token)
+  return api.mainKy.post('firebase/token', { body }).json()
+}
 
 export const uploadFile = (
   file: File

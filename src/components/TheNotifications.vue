@@ -8,7 +8,7 @@ const store = useNotifyStore();
   <div class="notification-container">
     <TransitionGroup name="list">
       <div v-for="n in store.items" :key="n.id" :class="['notification', n.type]">
-        <span>{{ n.message }}</span>
+        <span v-html="n.message"></span>
         <button class="close-btn" @click="store.remove(n.id)">&times;</button>
       </div>
     </TransitionGroup>
