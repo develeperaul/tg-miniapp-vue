@@ -14,7 +14,7 @@ firebase.initializeApp({
   storageBucket: "spgmarket-1499484215126.firebasestorage.app",
   messagingSenderId: "858305376392",
   appId: "1:858305376392:web:f2994ab3b6ad73d7d2af3d",
-  measurementId: "G-WWCMLNBHSC"
+  measurementId: "G-MMWPM9MJRZ"
 });
 
 
@@ -27,7 +27,7 @@ messaging.onBackgroundMessage((payload) => {
   console.log('🔥 [firebase-messaging-sw.js] Получено фоновое сообщение:', payload);
 
   // Извлекаем данные из уведомления
-  const notificationTitle = payload.notification?.title || 'Новое сообщение';
+  const notificationTitle = 'sss'+payload.notification?.title || 'Новое сообщение';
   const notificationBody = payload.notification?.body || 'У вас новое сообщение в чате';
   const notificationIcon = payload.notification?.icon || '/icon.png';
   
@@ -57,12 +57,13 @@ messaging.onBackgroundMessage((payload) => {
         title: '❌ Закрыть'
       }
     ],
-    tag: 'chat-message', // Группировка уведомлений
-    renotify: true // Уведомлять даже если есть такое же уведомление
+    // tag: 'chat-message', // Группировка уведомлений
+    tag: 'message-group'
+    // renotify: true // Уведомлять даже если есть такое же уведомление
   };
 
   // Показываем уведомление
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    // return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 // 👆 Обработка клика по уведомлению

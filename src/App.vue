@@ -25,13 +25,13 @@
     </div>
     
     <TheNotifications/>
-    <DebugConsole v-if="showDebug" />
+    <!-- <DebugConsole v-if="showDebug" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { requestNotificationPermission } from './composables/useFirebaseMessaging';
+
 import FooterNav from './components/FooterNav.vue'
 import { useMainStore } from './stores/main';
 import { useChatsStore } from './stores/chats';
@@ -41,6 +41,7 @@ import { storeToRefs } from 'pinia';
 import TheNotifications from './components/TheNotifications.vue';
 
 import DebugConsole from './components/DebugConsole.vue';
+import { setupFirebaseMessaging } from './composables/useFirebaseMessaging';
 const showDebug = ref(true); // Включите для отладки
 
 const route = useRoute()
@@ -48,16 +49,16 @@ const { load } = storeToRefs(useMainStore())
 
 
 onMounted(async () => {
+  if(localStorage.getItem('frb-token'))
+  console.log('frb-token', localStorage.getItem('frb-token'));
   if (getAccessToken()) {
     await useMainStore().setProfile()
     await useMainStore().setEmploye()
     await useChatsStore().setChats()
-    
+    await setupFirebaseMessaging()
   }
   
 })
 
-const enableNotifications = async () => {
-  await requestNotificationPermission();
-};
+
 </script>

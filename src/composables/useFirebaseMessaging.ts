@@ -53,24 +53,22 @@ export async function setupFirebaseMessaging() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
-        const isStandalone = () => {
-          // Для iOS (Safari)
-          console.log(navigator.serviceWorker.controller);
-          
-      const isIOSStandalone = window.navigator.standalone === true;
+      const isStandalone = () => {
+    // Для iOS (Safari)
+    const isIOSStandalone = window.navigator.standalone === true;
 
-      // Для Android, Chrome и Desktop
-      const isWebStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    // Для Android, Chrome и Desktop
+    const isWebStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
-      return isIOSStandalone || isWebStandalone;
-    };
+    return isIOSStandalone || isWebStandalone;
+  };
 
-    // Использование:
-    if (isStandalone()) {
-      console.log('🚀 Запущено как установленное PWA');
-    } else {
-      console.log('🌐 Открыто просто в браузере');
-    }
+  // Использование:
+  if (isStandalone()) {
+    console.log('🚀 Запущено как установленное PWA');
+  } else {
+    console.log('🌐 Открыто просто в браузере');
+  }
 
     // 1. Проверка для iOS: уведомления работают ТОЛЬКО в PWA режиме
     if (isIOS && !isStandalone) {

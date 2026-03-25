@@ -235,14 +235,16 @@ function sse() {
   eventSource = new EventSource(`${import.meta.env.VITE_API_URL!}/events/chats/${profile.value?.uuid}`);
 
   // Слушаем стандартные сообщения
-  eventSource.onmessage = (event: MessageEvent) => {
+  eventSource.onmessage = async(event: MessageEvent) => {
     try {
       console.log(event);
       
       // Парсим данные. Важно: в SSE данные приходят в поле 'data'
       const rawData = event.data as "ping" | string;
       if (rawData !== 'ping') {
-        storeChat.setMessgs(props.uuid)
+
+        await storeChat.setMessgs(props.uuid)
+        await scrollToBottom()
       }
       // const newMessage: ChatMessage = rawData.data || rawData;
       

@@ -13,7 +13,8 @@ export type ChatT = {
   id: number,
   uuid: string,
   message: MessageT,
-  name: string
+  name: string,
+  unread_messages_count: number
 }
 
 export type MessageT = {

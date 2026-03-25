@@ -1,5 +1,5 @@
 <template>
-  <div class=" container pt-5 pb-[60px] space-y-5 ">
+  <div class=" container pt-5 pb-[120px] space-y-5 ">
     <svg class=" absolute top-0 left-0" width="299" height="336" viewBox="0 0 299 336" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="41" cy="78" r="258" fill="#3A44A5"/>
     </svg>
@@ -15,16 +15,10 @@
           <br/>
           {{ nameP }}
         </div>
-        <div @click="logout" class=" text-white  w-[58px] h-[58px] rounded-full">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-            <path d="M9 12h12l-3 -3" />
-            <path d="M18 15l3 -3" />
-          </svg>
-        </div>
+        
   
       </div>
-      <div class=" grid  ">
+      <div class=" grid   ">
         <div class=" flex justify-between items-center mb-4">
     
           <div class=" h2 text-white">
@@ -71,6 +65,9 @@
             <div  v-if="store.employeesKeys.value?.reconciliation" class=" tab " @click="toChat(store.employeesKeys.value?.reconciliation)" >
               Сверка
             </div>
+            <div  v-if="store.employeesKeys.value?.alihorka" class=" tab " @click="toChat(store.employeesKeys.value?.alihorka)" >
+              Алехорка
+            </div>
             
           </div>
 
@@ -85,7 +82,11 @@
         </div>
         
       </div>
+      <div @click="logout" class=" mt-3 text-white border h-10 flex items-center justify-center border-white text-lg  rounded-full hover:text-black hover:bg-white">
+          Выйти
+        </div>
     </div>
+    
   </div>
   <NotificationPrompt/>
 </template>
