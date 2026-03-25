@@ -177,6 +177,7 @@ router.beforeEach(async (to, from, next) => {
 
       // Если пин-код еще не установлен
       console.log('→ Пин-код не установлен → на PinCode для установки')
+      
       return next({ 
         name: 'PinCode',
         query: { mode: 'setup', redirect: to.fullPath }

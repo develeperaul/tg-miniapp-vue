@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, provide, ref } from 'vue';
 
 import FooterNav from './components/FooterNav.vue'
 import { useMainStore } from './stores/main';
@@ -38,6 +38,7 @@ import { useChatsStore } from './stores/chats';
 import { getAccessToken } from './api/tokens';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { useIdleTimeout, IDLE_TIMEOUT_KEY } from './composables/useIdleTimeout';
 import TheNotifications from './components/TheNotifications.vue';
 
 import DebugConsole from './components/DebugConsole.vue';
@@ -59,6 +60,11 @@ onMounted(async () => {
   }
   
 })
+
+
+
+const idleTimeout = useIdleTimeout();
+provide(IDLE_TIMEOUT_KEY, idleTimeout);
 
 
 </script>

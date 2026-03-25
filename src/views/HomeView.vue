@@ -29,7 +29,7 @@
           </router-link>
         </div>
         <div class=" grid gap-5">
-          <div  class=" grid grid-cols-2 gap-5">
+          <div  class=" grid grid-cols-2 laptop:flex  laptop:flex-wrap gap-5">
             <router-link v-if="store.employeesKeys.value?.manager"  :to="{name:'Operator'}" class=" max-w-[160px] bg-white grid gap-2.5 rounded-[10px] overflow-hidden">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
                 <img src="/operator.png" alt="">  
@@ -52,9 +52,41 @@
                 <div class=" text-gray2">Работа с УПД и подписи</div>
               </div>
             </router-link>
+            <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'Buhg'}" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
+              <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
+                <img src="/yurist.jpg" alt="">  
+              </div>
+              <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
+                <div class=" txt-lg2 font-semibold">
+                  Юрист
+                </div>
+              </div>
+            </router-link>
+            <div v-if="store.employeesKeys.value?.alihorka"  @click="toChat(store.employeesKeys.value?.alihorka)" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
+              <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
+                <img src="/alehorka.jpg" alt="">  
+              </div>
+              <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
+                <div class=" txt-lg2 font-semibold">
+                  Алехорка
+                </div>
+                
+              </div>
+            </div>
+            <div v-if="store.employeesKeys.value?.reconciliation" @click="toChat(store.employeesKeys.value?.reconciliation)"  class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
+              <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
+                <img src="/sverka.jpg" alt="">  
+              </div>
+              <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
+                <div class=" txt-lg2 font-semibold">
+                  Сверка
+                </div>
+                
+              </div>
+            </div>
           </div>
           
-          <div class=" flex  gap-5">
+          <div class=" flex  gap-5 laptop:hidden">
             
             <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'FNS'}"   class=" tab " >
               Юрист
@@ -82,7 +114,7 @@
         </div>
         
       </div>
-      <div @click="logout" class=" mt-3 text-white border h-10 flex items-center justify-center border-white text-lg  rounded-full hover:text-black hover:bg-white">
+      <div @click="logout" class=" mx-auto laptop:max-w-fit px-5 mt-3 text-white border h-10 flex items-center justify-center border-white text-lg  rounded-full hover:text-black hover:bg-white">
           Выйти
         </div>
     </div>
