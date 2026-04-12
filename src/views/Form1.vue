@@ -4,10 +4,10 @@
     <Card class="container  mt-3" title="Создание заявки">
       <div class=" grid   gap-5">
         <!-- для Бухгалтерия -->
-        <a v-if="type === 'bum'" target="_blank" download href="/reestr-bum.xlsx" class=" text-blue-500 underline  text-lg  ">
+        <a v-if="type === 'bum'" target="_blank" href="https://disk.yandex.ru/i/dv65dTA3USEHLQ" class=" text-blue-500 underline  text-lg  ">
           Скачать реестр
         </a>
-        <a v-if="type === 'opl'" target="_blank" download href="/reestr-opl.xlsx" class=" text-blue-500 underline  text-lg  ">
+        <a v-if="type === 'opl'" target="_blank"  href="https://disk.yandex.ru/i/uUskXO_Er-180Q" class=" text-blue-500 underline  text-lg  ">
           Скачать реестр
         </a>
         
