@@ -130,9 +130,19 @@ router.beforeEach(async (to, from, next) => {
     // Загружаем данные при первом входе
     if (from.name === 'Auth') {
       console.log('→ Первый вход после авторизации')
-      await useMainStore().setProfile()
-      await useMainStore().setEmploye()
-      await useChatsStore().setChats()
+      useMainStore().load = true
+      try {
+        // Выполняем все запросы параллельно для ускорения загрузки
+        await Promise.all([
+          useMainStore().setProfile(),
+          useMainStore().setEmploye(),
+          useChatsStore().setChats() // Обычно метод называется setChats или fetchChats
+        ]);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      } finally {
+        useMainStore().load = false; // Выключаем спиннер в любом случае
+      }
       await setupFirebaseMessaging()
       
       // 🆕 Устанавливаем флаг, что нужно создать пин-код

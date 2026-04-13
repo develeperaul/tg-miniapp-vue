@@ -8,7 +8,15 @@ export default defineConfig({
   strategies: 'injectManifest',
   srcDir: 'public',              // <--- Указываем смотреть в public
   filename: 'firebase-messaging-sw.js', 
-  injectRegister: false, 
+      injectRegister: 'inline', 
+  injectManifest: {
+    injectionPoint: 'self.__WB_MANIFEST', 
+    globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+  devOptions: {
+    enabled: true, // Включаем для тестов
+    type: 'module'
+  },
   manifest: {
     name: 'Finclub App',
     short_name: 'Finclub',

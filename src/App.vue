@@ -1,7 +1,11 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-primary">
-    
+  <div>
+
+
+  </div>
+  <div v-if="useMainStore().isOnline" class="min-h-screen flex flex-col bg-primary">
     <main class="flex-1 ">
+      <!-- <FullScreenLoader :loading="load"/> -->
       <RouterView />
     </main>
     <FooterNav v-if="route.name !== 'Auth' && route.name !== 'PinCode'" class=" fixed bottom-0 w-full z-50" />
@@ -25,8 +29,9 @@
     </div>
     
     <TheNotifications/>
-    <!-- <DebugConsole v-if="showDebug" /> -->
+    <DebugConsole v-if="showDebug" />
   </div>
+  <NoInt v-else/>
 </template>
 
 <script setup lang="ts">
@@ -43,7 +48,9 @@ import TheNotifications from './components/TheNotifications.vue';
 
 import DebugConsole from './components/DebugConsole.vue';
 import { setupFirebaseMessaging } from './composables/useFirebaseMessaging';
-const showDebug = ref(true); // Включите для отладки
+import FullScreenLoader from './components/FullScreenLoader.vue';
+import NoInt from './components/NoInt.vue';
+const showDebug = ref(false); // Включите для отладки
 
 const route = useRoute()
 const { load } = storeToRefs(useMainStore())
@@ -53,9 +60,8 @@ onMounted(async () => {
   if(localStorage.getItem('frb-token'))
   console.log('frb-token', localStorage.getItem('frb-token'));
   if (getAccessToken()) {
-    await useMainStore().setProfile()
-    await useMainStore().setEmploye()
-    await useChatsStore().setChats()
+    
+    
     await setupFirebaseMessaging()
   }
   

@@ -44,6 +44,7 @@ import * as yup from 'yup'
 import { useMainStore } from '../stores/main';
 import { cleanTokensData, setTokensData } from '../api/tokens';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits<{
   (e: 'send', vals: any): void
@@ -51,7 +52,7 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const submitting = ref(false)
-
+const { load } = storeToRefs(useMainStore())
 // ───── схема валидации (файлы НЕ обязательны) ─────
 const schema = yup.object({
   token: yup.string().required('Обязательное поле'),
@@ -76,6 +77,7 @@ const { handleSubmit, resetForm} = useForm<{
 const onSubmit =  handleSubmit(async values => {
   submitting.value = true
   setTokensData(values.token.trim(), 30)
+  load.value = true
   try {
     await useMainStore().setProfile()
     router.push({ name: 'Home' });
@@ -88,6 +90,7 @@ const onSubmit =  handleSubmit(async values => {
     throw e
   }
   finally {
+    load.value = false
     submitting.value = false
   }
 })

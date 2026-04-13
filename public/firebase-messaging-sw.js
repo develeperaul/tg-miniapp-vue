@@ -4,6 +4,22 @@
 // Импортируем Firebase библиотеки (используем compat версии для Service Worker)
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
+importScripts('https://googleapis.com');
+
+const manifest = typeof self.__WB_MANIFEST !== 'undefined' ? self.__WB_MANIFEST : [];
+if (workbox) {
+  // Кэшируем все файлы приложения
+  workbox.precaching.precacheAndRoute(manifest);
+
+  // Решаем проблему "Сервер не отвечает" для Safari
+  workbox.routing.registerRoute(
+    ({ request }) => request.mode === 'navigate',
+    new workbox.strategies.NetworkFirst({
+      cacheName: 'offline-html-cache'
+    })
+  );
+}
+
 
 // ⚠️ ВАЖНО: Замените эти данные на свои из консоли Firebase
 // Они должны совпадать с теми, что в .env файле

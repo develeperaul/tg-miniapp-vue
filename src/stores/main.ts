@@ -5,8 +5,13 @@ import { getEmployees, getProfile } from '../api/main'
 import type { EmployeeT, ProfileT } from '../models/api'
 import { string } from 'yup'
 import { useRoute, useRouter } from 'vue-router'
+import { useOnline } from '@vueuse/core'
 import { type DataVal } from '../models'
 export const useMainStore = defineStore('main', () => {
+  const isOnline = useOnline()
+   // Обновляем состояние при изменении сети
+  window.addEventListener('online', () => isOnline.value = true);
+  window.addEventListener('offline', () => isOnline.value = false);
   const route = useRoute();
 
   const load = ref(false);
@@ -71,6 +76,7 @@ export const useMainStore = defineStore('main', () => {
     employees,
     employeesKeys,
     setEmploye,
-    currentEmpl
+    currentEmpl,
+    isOnline
   }
 })

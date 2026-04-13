@@ -1,5 +1,6 @@
 <template>
-  <div class=" container pt-5 pb-[120px] space-y-5 ">
+  
+  <div  class=" container pt-5 pb-[120px] space-y-5 ">
     <svg class=" absolute top-0 left-0" width="299" height="336" viewBox="0 0 299 336" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="41" cy="78" r="258" fill="#3A44A5"/>
     </svg>
@@ -120,6 +121,7 @@
     </div>
     
   </div>
+  
   <NotificationPrompt/>
 </template>
 
@@ -132,8 +134,11 @@ import { useMainStore } from '../stores/main';
 import { computed } from '@vue/reactivity';
 import { useChatsStore } from '../stores/chats';
 import { useRouter } from 'vue-router';
-import { cleanTokensData } from '../api/tokens';
+import { cleanTokensData, getAccessToken } from '../api/tokens';
 import { usePinCode } from '../composables/usePinCode';
+import NoInt from '../components/NoInt.vue';
+import { onMounted } from 'vue';
+
 const { chats, messages } = storeToRefs(useChatsStore())
 const store = storeToRefs(useMainStore())
 const storeChat = useChatsStore()
@@ -185,5 +190,23 @@ const toChat = async (id:string) => {
   }
 }
 
+onMounted(async () => {
+  if (getAccessToken()) {
+    store.load.value = true; // Включаем спиннер (черный фон, z-index 5000)
+
+    try {
+      // Выполняем все запросы параллельно для ускорения загрузки
+      await Promise.all([
+        useMainStore().setProfile(),
+        useMainStore().setEmploye(),
+        useChatsStore().setChats() // Обычно метод называется setChats или fetchChats
+      ]);
+    } catch (error) {
+      console.error("Ошибка при загрузке данных:", error);
+    } finally {
+      store.load.value = false; // Выключаем спиннер в любом случае
+    }
+  }
+})
   
 </script>
