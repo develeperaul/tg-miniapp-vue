@@ -3,11 +3,9 @@
 
     <Card class="container  mt-3" title="Ответ на треботвание ФНС">
       <div class=" grid   gap-5">
-        <!-- для Бухгалтерия -->
-        <!-- <a href="/" class=" text-blue-500 underline text-center text-lg  ">
-            Скачать образец реестра
-          </a> -->
-        <!-- <PaymentForm @send="send"/> -->
+        <div class=" text-red-600">
+          * если требование в рамках КНП, то документы надо предоставить, сформируйте пакет документов и продублируйте их нам вместе с требованием, если вне рамок КНП то можно воспользоваться автоответом и не предоставлять документы
+        </div>
         <a v-if="linkFNS" :href=" linkFNS" class=" text-blue-500 underline text-center text-lg  " target="_blank">
            Ссылка для скачивания
          </a>

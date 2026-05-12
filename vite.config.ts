@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue(),
     VitePWA({
   strategies: 'injectManifest',
-  srcDir: 'public',              // <--- Указываем смотреть в public
+  srcDir: '',              // <--- Указываем смотреть в public
   filename: 'firebase-messaging-sw.js', 
       injectRegister: 'inline', 
   injectManifest: {

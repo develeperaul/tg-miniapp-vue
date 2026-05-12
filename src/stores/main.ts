@@ -52,7 +52,9 @@ export const useMainStore = defineStore('main', () => {
       console.log(val.type);
       if (val.type === "message") {
         
-      }else if ( employeesKeys.value[val.type]) {
+      } else if (employeesKeys.value[val.type]) {
+        console.log(val.type);
+        
         currentEmpl.value = employeesKeys.value[val.type]
       }
       

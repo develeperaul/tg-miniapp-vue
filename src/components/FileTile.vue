@@ -45,25 +45,7 @@
 
     <!-- спинер поверх, пока грузим -->
     <div v-if="loading" class="file-img__spinner">
-      <svg class="file-img__spinner-icon" viewBox="0 0 24 24">
-        <circle
-          class="track"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke-width="3"
-          fill="none"
-        />
-        <circle
-          class="head"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke-width="3"
-          fill="none"
-          stroke-linecap="round"
-        />
-      </svg>
+      <CircularProgress :progress="progress" />
     </div>
   </div>
 
@@ -99,6 +81,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Field } from 'vee-validate'
+import CircularProgress from './CircularProgress.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -106,10 +89,11 @@ const props = withDefaults(
     url?: string
     noimg?: boolean
     loading?: boolean
+    progress?: number
     other?: boolean,
     title?: string
   }>(),
-  { noimg: true, loading: false, title: 'Документ' }
+  { noimg: true, loading: false, progress: 0, title: 'Документ' }
 )
 
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -154,25 +138,6 @@ const loadFile = (event: Event) => {
   }
   &__spinner {
     @apply absolute inset-0 bg-black/40 flex items-center justify-center rounded-[30px];
-  }
-  &__spinner-icon {
-    width: 32px;
-    height: 32px;
-  }
-  .track {
-    stroke: #e5e7eb;
-  }
-  .head {
-    stroke: #ffffff;
-    stroke-dasharray: 60;
-    stroke-dashoffset: 20;
-    animation: spin 0.8s linear infinite;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }
 </style>

@@ -54,8 +54,8 @@
       </div>
       <span :class="isActive? ' text-black' : 'text-primary'">Бухгалтерия</span>
     </RouterLink>
-    <RouterLink
-      :to="{name: 'FNS'}"
+    <!-- <RouterLink
+      :to="{name: 'Lawyer'}"
       class="flex flex-col gap-1 items-center text-[11px] font-bold transition"
       activeClass="active-t"
       v-slot="{isActive}"
@@ -70,7 +70,7 @@
 
       </div>
       <span :class="isActive? ' text-black' : 'text-primary'">Юрист</span>
-    </RouterLink>
+    </RouterLink> -->
   </nav>
 </template>
 

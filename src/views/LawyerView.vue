@@ -1,43 +1,27 @@
 <template>
   <div class=" pt grid  min-h-screen" >
 
-    <Card class="container  mt-3" title="Бухгалтерия">
+    <Card class="container  mt-3" title="Юрист">
       <div class=" grid gap-5">
 
         <div class=" grid gap-5">
-          <router-link :to="{name: 'NumbUPD'}" class="item-link">
+          <router-link :to="{name: 'FNS'}" class="item-link">
             <div class=" item-link__content">
               <div class="item-link__title">
-                Запрос номера УПД
+                Автоответ на требование
               </div>
-              <div class="item-link__text">
-                Если вы хотите купить документы, то нажмите кнопку бумажный, если вам нужен номер упд на оплату то кнопку оплаченный
-                <!-- Запрос номера УПД <br> бумажного или оплаченного формата. -->
-                <!-- Здесь описание - консультация с <br> широким активом представляет <br> собой интересный эксперимент. -->
-              </div>
+              
             </div>
             <img class="item-link__bg" src="/create-order.png" alt="">  
           </router-link>
-          <div class="item-link" @click="toChat">
-            <div class=" item-link__content">
-              <div class="item-link__title">
-                Написать сообщение
-              </div>
-              <div class="item-link__text">
-                Перейти в диалог c бухгалтером
-              </div>
-            </div>
-            <img class="item-link__bg" src="/pen.png" alt="">  
-          </div>
-          <router-link :to="{name:'PodisForm',}" class="item-link">
+          <router-link :to="{name:'PodisFormLawyer',}" class="item-link">
 
             <div class=" item-link__content">
               <div class="item-link__title">
-                Подписать документы
+                Отправить документы
               </div>
               <div class="item-link__text">
-                <!-- Загрузить документы на подпись -->
-                 Если вам надо подписать документы, то сформируйте пакет, прикрепите и отправьте нам)
+                Cформировав пакет документов в ответ на требование продублируйте его нам, что б мы в случае запроса могли предоставить такие же
               </div>
             </div>
             <img class="item-link__bg" src="/podpis.png" alt="">  

@@ -53,7 +53,7 @@
                 <div class=" text-gray2">Работа с УПД и подписи</div>
               </div>
             </router-link>
-            <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'Buhg'}" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
+            <!-- <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'Lawyer'}" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
                 <img src="/yurist.jpg" alt="">  
               </div>
@@ -62,7 +62,7 @@
                   Юрист
                 </div>
               </div>
-            </router-link>
+            </router-link> -->
             <div v-if="store.employeesKeys.value?.alihorka"  @click="toChat(store.employeesKeys.value?.alihorka)" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
                 <img src="/alehorka.jpg" alt="">  
@@ -82,16 +82,18 @@
                 <div class=" txt-lg2 font-semibold">
                   Сверка
                 </div>
-                
+                <div class="text-gray2">
+                  Тут вы можете сверить остатки по выдачи
+                </div>
               </div>
             </div>
           </div>
           
           <div class=" flex  gap-5 laptop:hidden">
             
-            <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'FNS'}"   class=" tab " >
+            <!-- <router-link v-if="store.employeesKeys.value?.lawyer" :to="{name:'Lawyer'}"   class=" tab " >
               Юрист
-            </router-link>
+            </router-link> -->
             <div  v-if="store.employeesKeys.value?.economist" class=" tab " @click="startOtherChat(store.employeesKeys.value?.economist)" >
               Экономист
             </div>

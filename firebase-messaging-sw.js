@@ -4,21 +4,28 @@
 // Импортируем Firebase библиотеки (используем compat версии для Service Worker)
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
-importScripts('https://googleapis.com');
 
-const manifest = typeof self.__WB_MANIFEST !== 'undefined' ? self.__WB_MANIFEST : [];
-if (workbox) {
-  // Кэшируем все файлы приложения
-  workbox.precaching.precacheAndRoute(manifest);
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
+import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { NetworkFirst } from 'workbox-strategies';
 
-  // Решаем проблему "Сервер не отвечает" для Safari
-  workbox.routing.registerRoute(
-    ({ request }) => request.mode === 'navigate',
-    new workbox.strategies.NetworkFirst({
-      cacheName: 'offline-html-cache'
-    })
-  );
-}
+// Очистка старого кэша
+cleanupOutdatedCaches();
+
+// Прекэш (Vite вставит массив файлов сюда)
+precacheAndRoute(self.__WB_MANIFEST || []);
+
+// Стратегия для навигации (чтобы не было динозавра)
+const navigationRoute = new NavigationRoute(new NetworkFirst({
+  cacheName: 'navigations',
+}));
+registerRoute(navigationRoute);
+
+// Принудительная активация
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
+
+
 
 
 // ⚠️ ВАЖНО: Замените эти данные на свои из консоли Firebase

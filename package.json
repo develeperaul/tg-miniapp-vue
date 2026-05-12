@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@telegram-apps/sdk": "^3.11.8",
+    "@vueuse/core": "^14.2.1",
     "dayjs": "^1.11.19",
     "days": "^1.1.1",
     "firebase": "^12.10.0",

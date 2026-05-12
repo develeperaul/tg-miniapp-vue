@@ -6,6 +6,7 @@ import OperatorView from '../views/OperatorView.vue'
 import CreateOrderView from '../views/CreateOrderView.vue'
 import NumbUPDView from '../views/NumbUPDView.vue'
 import BumUPDView from '../views/BumUPDView.vue'
+import LawyerView from '../views/LawyerView.vue'
 import BuhgView from '../views/BuhgView.vue'
 import BuhgForm from '../views/BuhgForm.vue'
 import Form1 from '../views/Form1.vue'
@@ -34,12 +35,7 @@ const routes = [
     name: 'Auth', 
     component: AuthView 
   },
-  { 
-    path: '/fns', 
-    name: 'FNS', 
-    component: FNS,  
-    meta: { type: 'lawyer', auth: true, requiresPin: true }
-  },
+  
   { 
     path: '/dialogs', 
     name: 'DialogsList', 
@@ -79,6 +75,24 @@ const routes = [
       { path: '/podpis', name: 'PodisForm', component: PodisForm },
     ] 
   },
+  {
+    path: '/fns', 
+    component: MainLayout, 
+    meta: { type: 'lawyer', auth: true, requiresPin: true }, 
+    children: [
+      { path: '', name: 'Lawyer', component: LawyerView },
+      { path: '/fns', name: 'FNS', component: FNS },
+      { path: '/podpis-lawyer', name: 'PodisFormLawyer', component: PodisForm },
+      // { path: '/numb-upd', name: 'NumbUPD', component: NumbUPDView },
+      // { path: '/podpis', name: 'PodisForm', component: PodisForm },
+    ] 
+  },
+  // { 
+  //   path: '/fns', 
+  //   name: 'FNS', 
+  //   component: FNS,  
+  //   meta: { type: 'lawyer', auth: true, requiresPin: true }
+  // },
   {
     path: '/pin',
     name: 'PinCode',

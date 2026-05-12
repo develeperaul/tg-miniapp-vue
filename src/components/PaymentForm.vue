@@ -57,6 +57,7 @@
         :url="f.preview"
         :noimg="f.noimg"
         :loading="f.loading"
+        :progress="f.progress"
         @deleteFile="handleDeleteFile"
       />
       <!-- кнопка добавить -->
@@ -83,13 +84,14 @@ import { ref } from 'vue'
 import { Field, ErrorMessage, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import FileTile from './FileTile.vue' // проверь, что именно ТАК называется файл
-import { uploadFile } from '../api/main'
+import { uploadFileWithProgress } from '../api/main'
 
 type UiFile = {
   id: string
   preview: string
   noimg: boolean
   loading: boolean
+  progress: number
   serverId?: string
 }
 
@@ -143,16 +145,6 @@ function isAllowedFile(file: File) {
 }
 
 
-async function uploadFileToServer(file: File): Promise<{ id: string; url?: string }> {
-  
-  const res = (await uploadFile(file)).data
-  
-  return {
-    id: res.uuid,
-    url: res.url
-  }
-}
-
 // обработка выбора файла
 async function handleFileLoad(file: File) {
   // 1) формат
@@ -181,17 +173,21 @@ async function handleFileLoad(file: File) {
     id,
     preview,
     noimg: !isImage,
-    loading: true
+    loading: true,
+    progress: 0
   }
   files.value.push(item)
 
   try {
-    const res = await uploadFileToServer(file)
+    const res = (await uploadFileWithProgress(file, (p) => {
+      const target = files.value.find(f => f.id === id)
+      if (target) target.progress = p
+    })).data
 
     const target = files.value.find(f => f.id === id)
     if (target) {
       target.loading = false
-      target.serverId = res.id
+      target.serverId = res.uuid
       if (res.url && isImage) {
         target.preview = res.url
       }
@@ -203,7 +199,7 @@ async function handleFileLoad(file: File) {
 
     setFieldValue('files', serverIds.length ? serverIds : null)
   } catch (e) {
-    files.value = files.value.filter(f => f.id === id)
+    files.value = files.value.filter(f => f.id !== id)
   }
 }
 

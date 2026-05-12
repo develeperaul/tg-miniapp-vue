@@ -103,6 +103,7 @@
           :url="f.preview"
           :noimg="f.noimg"
           :loading="f.loading"
+          :progress="f.progress"
           @deleteFile="deleteAttachment"
         />
       </div>
@@ -150,7 +151,7 @@ import { backButton } from '@telegram-apps/sdk'
 import { getMessgs, sendMess } from '../api/chats'
 import { useMainStore } from '../stores/main'
 import { useChatsStore } from '../stores/chats'
-import { uploadFile } from '../api/main'
+import { uploadFileWithProgress } from '../api/main'
 import dayjs from 'dayjs';
 import { formatDate } from '../utils/date';
 
@@ -165,6 +166,7 @@ type UiFile = {
   preview: string
   noimg: boolean
   loading: boolean
+  progress: number
   serverId?: string
 }
 const props = defineProps<{
@@ -285,16 +287,6 @@ function formatDateTime(iso: string) {
   )
 }
 
-// фейковый аплоад; сюда потом подключишь реальный API
-async function uploadAttachment(file: File): Promise<{ id: string; url?: string }> {
-  const res = (await uploadFile(file)).data
-  
-  return {
-    id: res.uuid,
-    url: res.url
-  }
-}
-
 async function handleAttachFile(file: File) {
   const id = crypto.randomUUID()
   const isImage = file.type.startsWith('image/')
@@ -304,17 +296,22 @@ async function handleAttachFile(file: File) {
     id,
     preview,
     noimg: !isImage,
-    loading: true
+    loading: true,
+    progress: 0
   }
   attachmentTiles.value.push(item)
 
   try {
-    const uploaded = await uploadAttachment(file)
+    const res = (await uploadFileWithProgress(file, (p) => {
+      const target = attachmentTiles.value.find(f => f.id === id)
+      if (target) target.progress = p
+    })).data
+
     const target = attachmentTiles.value.find(f => f.id === id)
     if (target) {
       target.loading = false
-      target.serverId = uploaded.id
-      if (uploaded.url && isImage) target.preview = uploaded.url
+      target.serverId = res.uuid
+      if (res.url && isImage) target.preview = res.url
     }
   } catch {
     attachmentTiles.value = attachmentTiles.value.filter(f => f.id !== id)
@@ -340,8 +337,13 @@ function deleteAttachment(id: string) {
 // }
 
 const send = async () => {
-  
-  const text = messageText.value.trim()
+  let text='';
+  if (messageText.value) {
+    
+    text = messageText.value
+  } else {
+    text = 'Файл'
+  }
   // if (!text && !attachmentTiles.value.length) return
   const imgUrls = attachmentTiles.value.map(f => { return { uuid: f.serverId || '' } })
   mainStore.load= true
