@@ -3,33 +3,34 @@
     :width="size"
     :height="size"
     :viewBox="`0 0 ${size} ${size}`"
-    class="circular-progress"
   >
-    <circle
-      :cx="center"
-      :cy="center"
-      :r="radius"
-      :stroke-width="strokeWidth"
-      stroke="#e5e7eb"
-      fill="none"
-    />
-    <circle
-      :cx="center"
-      :cy="center"
-      :r="radius"
-      :stroke-width="strokeWidth"
-      :stroke="color"
-      fill="none"
-      stroke-linecap="round"
-      :stroke-dasharray="circumference"
-      :stroke-dashoffset="dashOffset"
-      class="progress-arc"
-    />
+    <g :transform="`rotate(-90 ${center} ${center})`">
+      <circle
+        :cx="center"
+        :cy="center"
+        :r="radius"
+        :stroke-width="strokeWidth"
+        stroke="#e5e7eb"
+        fill="none"
+      />
+      <circle
+        :cx="center"
+        :cy="center"
+        :r="radius"
+        :stroke-width="strokeWidth"
+        :stroke="color"
+        fill="none"
+        stroke-linecap="round"
+        :stroke-dasharray="circumference"
+        :stroke-dashoffset="dashOffset"
+        class="progress-arc"
+      />
+    </g>
     <text
       :x="center"
       :y="center"
       text-anchor="middle"
-      dominant-baseline="central"
+      :dy="dy"
       :font-size="fontSize"
       font-weight="700"
       :fill="color"
@@ -61,15 +62,10 @@ const dashOffset = computed(() =>
 )
 const displayPercent = computed(() => Math.min(Math.max(Math.round(props.progress), 0), 100))
 const fontSize = computed(() => Math.round(props.size * 0.3))
+const dy = computed(() => Math.round(fontSize.value * 0.35))
 </script>
 
 <style scoped>
-.circular-progress {
-  transform: rotate(-90deg);
-}
-.circular-progress text {
-  transform: rotate(90deg);
-}
 .progress-arc {
   transition: stroke-dashoffset 0.3s ease;
 }
