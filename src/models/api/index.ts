@@ -2,6 +2,15 @@ export type DataObj<T> = {
   data: T
 }
 
+export type PaginatedDataObj<T> = DataObj<T> & {
+  current_page?: number
+  last_page?: number
+  meta?: {
+    current_page?: number
+    last_page?: number
+  }
+}
+
 export type EmployeeT = {
   uuid: string; type: string
 }

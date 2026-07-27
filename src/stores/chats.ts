@@ -14,11 +14,29 @@ export const useChatsStore = defineStore('chats', () => {
   }
 
   const messages = ref<MessageT[]>([])
+  const loadingMessages = ref(false)
+  const loadingMessagesProgress = ref(0)
   const setMessgs = async (chat_uuid: string) => {
+    loadingMessages.value = true
+    loadingMessagesProgress.value = 0
     try {
-     messages.value =  (await getMessgs(chat_uuid)).data
+      const loadedMessages: MessageT[] = []
+      let page = 1
+      let lastPage = 1
+
+      do {
+        const response = await getMessgs(chat_uuid, page)
+        loadedMessages.push(...response.data)
+        lastPage = response.last_page ?? response.meta?.last_page ?? page
+        loadingMessagesProgress.value = Math.round((page / lastPage) * 100)
+        page = (response.current_page ?? response.meta?.current_page ?? page) + 1
+      } while (page <= lastPage)
+
+      messages.value = loadedMessages
     } catch (e) {
       throw e
+    } finally {
+      loadingMessages.value = false
     }
   }
 
@@ -26,6 +44,8 @@ export const useChatsStore = defineStore('chats', () => {
     chats,
     setChats,
     messages,
+    loadingMessages,
+    loadingMessagesProgress,
     setMessgs
   }
 })

@@ -26,7 +26,19 @@
     <!-- messages -->
     <main ref="chatContainer" class="flex-1 overflow-y-auto px-5 pt-[100px] pb-[270px] space-y-3">
       <div
-        v-if="!storeChat.messages.length"
+        v-if="storeChat.loadingMessages"
+        class="text-xs text-gray-400 mt-4 space-y-2"
+      >
+        <div>Загрузка сообщений... {{ storeChat.loadingMessagesProgress }}%</div>
+        <div class="h-1 w-full rounded-full bg-[#E5F0FF] overflow-hidden">
+          <div
+            class="h-full rounded-full bg-[#242F9B] transition-all duration-300"
+            :style="{ width: `${storeChat.loadingMessagesProgress}%` }"
+          />
+        </div>
+      </div>
+      <div
+        v-else-if="!storeChat.messages.length"
         class="text-xs text-gray-400 mt-4"
       >
         Сообщений пока нет.

@@ -1,4 +1,4 @@
-import { type ChatT, type DataObj, type FNST, type MessageT } from '../models/api'
+import { type ChatT, type DataObj, type FNST, type MessageT, type PaginatedDataObj } from '../models/api'
 import { api } from './index'
 
 export const getChats = (): Promise<DataObj<ChatT[]>> => {
@@ -14,8 +14,8 @@ export const chat = (connector_uuid: string): Promise<DataObj<{
     .post(`chats/${connector_uuid}`)
     .json()
 }
-export const getMessgs = (chat_uuid: string): Promise<DataObj<MessageT[]>> => {
-  return api.mainKy(`chats/${chat_uuid}/messages`)
+export const getMessgs = (chat_uuid: string, page = 1): Promise<PaginatedDataObj<MessageT[]>> => {
+  return api.mainKy(`chats/${chat_uuid}/messages`, { searchParams: { page } })
     .json()
 }
 export const sendMess = (chat_uuid: string, obj:{
