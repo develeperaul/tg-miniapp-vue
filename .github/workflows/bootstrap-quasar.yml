@@ -26,7 +26,7 @@ jobs:
           }
       - name: Generate pristine Quasar CLI + Vite application
         run: |
-          npm create quasar@latest _quasar-seed -- --template app --engine vite-3 --preset typescript --preset sass --preset pinia --defaults --name finclub-online --product "FinClub Online" --no-git
+          npm create quasar@latest _quasar-seed -- --template app --preset typescript --preset sass --preset pinia --defaults --name finclub-online --product "FinClub Online" --no-git
       - name: Integrate existing Vue application without replacing screens
         run: python3 .github/quasar-bootstrap.py
       - name: Install project dependencies
