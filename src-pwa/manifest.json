@@ -1,0 +1,18 @@
+{
+  "name": "Finclub App",
+  "short_name": "Finclub",
+  "description": "FinClub Telegram Mini App",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F7F8FC",
+  "theme_color": "#242F9B",
+  "icons": [
+    {
+      "src": "/finclub-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

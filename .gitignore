@@ -25,3 +25,7 @@ dist-ssr
 .env
 *.env
 /public/firebase-messaging-sw.js
+
+# Quasar CLI generated files
+.quasar/
+/quasar.config.*.temporary.compiled*
