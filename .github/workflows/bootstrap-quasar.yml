@@ -1,0 +1,46 @@
+name: Initialize official Quasar CLI scaffold
+
+on:
+  push:
+    branches: [feat/quasar-clean-init]
+    paths:
+      - '.github/workflows/bootstrap-quasar.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  initialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Delete abandoned migration branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/feat/quasar-cli-migration" || {
+            echo "::warning::Old branch could not be deleted; investigate permissions"
+          }
+      - name: Generate pristine Quasar CLI + Vite application
+        run: |
+          npm create quasar@latest _quasar-seed -- --template app --engine vite-3 --preset typescript --preset sass --preset pinia --defaults --name finclub-online --product "FinClub Online" --no-git
+      - name: Integrate existing Vue application without replacing screens
+        run: python3 .github/quasar-bootstrap.py
+      - name: Install project dependencies
+        run: npm install --no-audit --no-fund
+      - name: Initialize native Capacitor app ID
+        run: npx quasar mode add capacitor --app-id ru.finclubonline --app-name "FinClub Online"
+      - name: Build Quasar SPA
+        run: npm run build
+      - name: Commit clean initialized project
+        run: |
+          rm -rf _quasar-seed
+          rm -f .github/workflows/bootstrap-quasar.yml .github/quasar-bootstrap.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: initialize Quasar CLI from official scaffold with FinClub app ID"
+          git push origin "HEAD:$GITHUB_REF_NAME"
