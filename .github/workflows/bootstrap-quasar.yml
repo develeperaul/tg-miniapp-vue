@@ -1,4 +1,4 @@
-name: Initialize official Quasar CLI scaffold
+name: Initialize official Quasar CLI scaffold (v2)
 
 on:
   push:
