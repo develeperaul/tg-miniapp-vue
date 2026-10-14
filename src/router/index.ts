@@ -1,3 +1,4 @@
+import { defineRouter } from '#q-app'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AuthView from '../views/AuthView.vue'
@@ -113,6 +114,7 @@ const routes = [
   }
 ]
 
+export default defineRouter(() => {
 const router = createRouter({
   history: createWebHistory(),
   routes
@@ -222,7 +224,8 @@ router.beforeEach(async (to, from, next) => {
   return next()
 })
 
-export default router
+return router
+})
 // router.beforeEach(async (to, from, next) => {
 
 //   console.log(getAccessToken());
