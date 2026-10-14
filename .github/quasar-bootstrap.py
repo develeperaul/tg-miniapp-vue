@@ -55,7 +55,7 @@ if sass.exists():
 router = root / "src/router/index.ts"
 text = router.read_text(encoding="utf-8")
 if "defineRouter" not in text:
-    text = "import { defineRouter } from '#q-app/wrappers'\n" + text
+    text = "import { defineRouter } from '#q-app'\n" + text
 if "export default router" in text:
     text = text.replace("const router = createRouter({", "export default defineRouter(() => {\nconst router = createRouter({", 1)
     text = text.replace("export default router", "return router\n})", 1)
@@ -65,7 +65,7 @@ router.write_text(text, encoding="utf-8")
 boot = root / "src/boot/telegram.ts"
 boot.parent.mkdir(parents=True, exist_ok=True)
 boot.write_text(
-    "import { defineBoot } from '#q-app/wrappers'\n"
+    "import { defineBoot } from '#q-app'\n"
     "import { initTelegram } from '../plugins/telegram'\n"
     "export default defineBoot(() => { void initTelegram() })\n",
     encoding="utf-8",
@@ -120,6 +120,11 @@ extra = "\n".join(x for x in starter.splitlines() if x.strip() and x not in curr
 ignore.write_text(current + "\n# Official Quasar CLI build artifacts\n" + extra + "\n.quasar/\n_quasar-seed/\n", encoding="utf-8")
 
 # Remove obsolete Vite project entry/configuration, not source views or business code.
+# The official scaffold is ESM: old Tailwind/PostCSS CommonJS configuration
+# must use .cjs rather than .js to be loadable by Vite.
+for old_name, new_name in (("postcss.config.js", "postcss.config.cjs"), ("tailwind.config.js", "tailwind.config.cjs")):
+    if (root / old_name).exists():
+        (root / old_name).rename(root / new_name)
 for obsolete in ("vite.config.ts", "tsconfig.app.json", "tsconfig.node.json", "src/main.ts"):
     f = root / obsolete
     if f.exists():
