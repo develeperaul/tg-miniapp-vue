@@ -22,10 +22,16 @@ const mode = computed(() => {
 
 const handleSuccess = () => {
   const redirectPath = sessionStorage.getItem('redirectAfterPin');
+  const queryRedirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/')
+    ? route.query.redirect
+    : null;
+  const destination = redirectPath && redirectPath !== '/pin'
+    ? redirectPath
+    : queryRedirect;
    
-  if (redirectPath && redirectPath !== '/pin') {
+  if (destination) {
     sessionStorage.removeItem('redirectAfterPin');
-    router.push(redirectPath).then(() => {
+    router.push(destination).then(() => {
       // После возврата на страницу перезапускаем таймер
       idleTimeout?.restartTimer();
     });

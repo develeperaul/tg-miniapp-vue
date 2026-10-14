@@ -50,19 +50,19 @@ messaging.onBackgroundMessage((payload) => {
   console.log('🔥 [firebase-messaging-sw.js] Получено фоновое сообщение:', payload);
 
   // Извлекаем данные из уведомления
-  const notificationTitle = 'sss'+payload.notification?.title || 'Новое сообщение';
+  const notificationTitle = payload.notification?.title || 'Новое сообщение';
   const notificationBody = payload.notification?.body || 'У вас новое сообщение в чате';
-  const notificationIcon = payload.notification?.icon || '/icon.png';
+  const notificationIcon = payload.notification?.icon || '/finclub-icon.png';
   
   // Данные для открытия нужного чата при клике
-  const chatId = payload.data?.chatId || null;
-  const messageId = payload.data?.messageId || null;
+  const chatId = payload.data?.chatId || payload.data?.chat_id || null;
+  const messageId = payload.data?.messageId || payload.data?.message_id || null;
 
   // Настройки уведомления
   const notificationOptions = {
     body: notificationBody,
     icon: notificationIcon,
-    badge: '/badge.png', // Маленькая иконка в статус-баре
+    badge: '/finclub-icon.png', // Маленькая иконка в статус-баре
     vibrate: [200, 100, 200], // Вибрация для мобильных устройств
     data: {
       chatId: chatId,
@@ -86,7 +86,7 @@ messaging.onBackgroundMessage((payload) => {
   };
 
   // Показываем уведомление
-    // return self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 // 👆 Обработка клика по уведомлению
@@ -130,8 +130,8 @@ self.addEventListener('notificationclick', (event) => {
       // Если нет открытого окна, открываем новое
       if (clients.openWindow) {
         // Можно открыть конкретный чат, если есть chatId
-        const openUrl = notificationData.chatId 
-          ? `/?chat=${notificationData.chatId}` 
+        const openUrl = notificationData.chatId
+          ? `/dialogs/${encodeURIComponent(notificationData.chatId)}${notificationData.messageId ? `?messageId=${encodeURIComponent(notificationData.messageId)}` : ''}`
           : urlToOpen;
         return clients.openWindow(openUrl);
       }

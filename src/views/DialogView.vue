@@ -34,6 +34,7 @@
       <div
         v-for="m in storeChat.messages"
         :key="m.uuid"
+        :data-message-id="m.uuid || m.id"
         class="flex"
         :class="{ 'justify-end': m.sender.type === 'mini_app' }"
       >
@@ -178,7 +179,15 @@ const mainStore = useMainStore()
 const { profile } = storeToRefs(mainStore)
 onMounted(async () => {
   await storeChat.setMessgs(props.uuid)
-  await scrollToBottom()
+  const messageId = typeof route.query.messageId === 'string' ? route.query.messageId : null
+  if (messageId) {
+    await nextTick()
+    Array.from(document.querySelectorAll<HTMLElement>('[data-message-id]'))
+      .find((element) => element.dataset.messageId === messageId)
+      ?.scrollIntoView({ block: 'center' })
+  } else {
+    await scrollToBottom()
+  }
   if (backButton.mount.isAvailable()) {
     backButton.mount()
     if (backButton.show.isAvailable()) backButton.show()

@@ -138,7 +138,8 @@ router.beforeEach(async (to, from, next) => {
     // Проверяем наличие токена
     if (!getAccessToken()) {
       console.log('→ Нет токена, редирект на Auth')
-      return next({ name: 'Auth' })
+      // Keep notification/deep-link destination until the user signs in again.
+      return next({ name: 'Auth', query: { redirect: to.fullPath } })
     }
 
     // Загружаем данные при первом входе

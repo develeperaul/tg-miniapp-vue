@@ -11,7 +11,9 @@ export default defineConfig({
       injectRegister: 'inline', 
   injectManifest: {
     injectionPoint: 'self.__WB_MANIFEST', 
-    globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+    globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+    // Public assets include a map image larger than Workbox's 2 MiB default.
+    maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
       },
   devOptions: {
     enabled: true, // Включаем для тестов
@@ -31,7 +33,7 @@ export default defineConfig({
   }
 }),
     
-    basicSsl()
+    // basicSsl()
   ],
   server: {
     port: 5173,

@@ -43,7 +43,7 @@ import { Field, ErrorMessage, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useMainStore } from '../stores/main';
 import { cleanTokensData, setTokensData } from '../api/tokens';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 const emit = defineEmits<{
@@ -51,6 +51,7 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
+const route = useRoute()
 const submitting = ref(false)
 const { load } = storeToRefs(useMainStore())
 // ───── схема валидации (файлы НЕ обязательны) ─────
@@ -80,7 +81,10 @@ const onSubmit =  handleSubmit(async values => {
   load.value = true
   try {
     await useMainStore().setProfile()
-    router.push({ name: 'Home' });
+    const redirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/')
+      ? route.query.redirect
+      : '/';
+    router.push(redirect);
   }
   catch (e) {
     if (e?.response?.status === 401) { 

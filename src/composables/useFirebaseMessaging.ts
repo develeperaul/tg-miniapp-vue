@@ -2,6 +2,55 @@ import { useNotifyStore } from '../stores/notifications';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { setFRB } from '../api/main';
+import type { Router } from 'vue-router';
+
+const APP_ICON = '/finclub-icon.png';
+
+type NotificationTarget = {
+  chatId?: string | number;
+  chat_id?: string | number;
+  messageId?: string | number;
+  message_id?: string | number;
+  url?: string;
+};
+
+function getNotificationPath(data: NotificationTarget): string | null {
+  const chatId = data.chatId ?? data.chat_id;
+  if (chatId !== undefined && chatId !== null && String(chatId).trim()) {
+    const messageId = data.messageId ?? data.message_id;
+    const query = messageId === undefined || messageId === null || !String(messageId).trim()
+      ? ''
+      : `?messageId=${encodeURIComponent(String(messageId))}`;
+    return `/dialogs/${encodeURIComponent(String(chatId))}${query}`;
+  }
+
+  // Accept only same-origin application paths supplied by the backend.
+  if (data.url) {
+    try {
+      const url = new URL(data.url, window.location.origin);
+      if (url.origin === window.location.origin && url.pathname.startsWith('/')) {
+        return `${url.pathname}${url.search}${url.hash}`;
+      }
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+/** Receives clicks from an already open service-worker controlled window. */
+export function setupNotificationClickListener(router: Router) {
+  if (!('serviceWorker' in navigator)) return () => undefined;
+
+  const onMessage = (event: MessageEvent<{ type?: string; data?: NotificationTarget }>) => {
+    if (event.data?.type !== 'NOTIFICATION_CLICK') return;
+    const path = getNotificationPath(event.data.data ?? {});
+    if (path) router.push(path).catch(console.error);
+  };
+
+  navigator.serviceWorker.addEventListener('message', onMessage);
+  return () => navigator.serviceWorker.removeEventListener('message', onMessage);
+}
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -164,8 +213,8 @@ export function setupMessageListener() {
         
         new Notification(payload.notification.title || 'Новое сообщение', {
           body: payload.notification.body,
-          icon: payload.notification.icon || '/icon.png',
-          badge: '/badge.png'
+          icon: payload.notification.icon || APP_ICON,
+          badge: APP_ICON
         });
       }
     });

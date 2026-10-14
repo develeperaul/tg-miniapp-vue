@@ -71,7 +71,7 @@
   ref="fileInput"
   type="file"
   hidden
-  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.zip,.rar,.7z,.tar,.gz,.bz2,.xz"
   @change="loadFile"
 />
     </Field>

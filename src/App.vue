@@ -35,28 +35,31 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, provide, ref } from 'vue';
+import { onBeforeUnmount, onMounted, provide, ref } from 'vue';
 
 import FooterNav from './components/FooterNav.vue'
 import { useMainStore } from './stores/main';
 import { useChatsStore } from './stores/chats';
 import { getAccessToken } from './api/tokens';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useIdleTimeout, IDLE_TIMEOUT_KEY } from './composables/useIdleTimeout';
 import TheNotifications from './components/TheNotifications.vue';
 
 import DebugConsole from './components/DebugConsole.vue';
-import { setupFirebaseMessaging } from './composables/useFirebaseMessaging';
+import { setupFirebaseMessaging, setupNotificationClickListener } from './composables/useFirebaseMessaging';
 import FullScreenLoader from './components/FullScreenLoader.vue';
 import NoInt from './components/NoInt.vue';
 const showDebug = ref(false); // Включите для отладки
 
 const route = useRoute()
+const router = useRouter()
 const { load } = storeToRefs(useMainStore())
+let removeNotificationClickListener: (() => void) | undefined
 
 
 onMounted(async () => {
+  removeNotificationClickListener = setupNotificationClickListener(router)
   if(localStorage.getItem('frb-token'))
   console.log('frb-token', localStorage.getItem('frb-token'));
   if (getAccessToken()) {
@@ -66,6 +69,8 @@ onMounted(async () => {
   }
   
 })
+
+onBeforeUnmount(() => removeNotificationClickListener?.())
 
 
 
