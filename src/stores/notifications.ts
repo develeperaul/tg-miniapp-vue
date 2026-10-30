@@ -3,9 +3,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useNotifyStore = defineStore('notify', () => {
-  const items = ref([]);
+  const items = ref<{ id: number; message: string; type: string }[]>([]);
 
-  const add = (message, type = 'positive', duration = 3000) => {
+  const add = (message: string, type = 'positive', duration = 3000) => {
     
     const id = Date.now();
     items.value.push({ id, message, type });
@@ -13,7 +13,7 @@ export const useNotifyStore = defineStore('notify', () => {
     setTimeout(() => remove(id), duration);
   };
 
-  const remove = (id) => {
+  const remove = (id: number) => {
     items.value = items.value.filter(n => n.id !== id);
   };
 

@@ -39,8 +39,8 @@ export async function initTelegram() {
       backButton.mount()
     }
 
-    if (closingBehavior.disableClose.isAvailable()) {
-      closingBehavior.disableClose()
+    if (closingBehavior.disableConfirmation.isAvailable()) {
+      closingBehavior.disableConfirmation()
     }
 
     initialized = true

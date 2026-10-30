@@ -1,6 +1,6 @@
 <template>
   
-  <div  class=" container pt-5 pb-[120px] space-y-5 ">
+  <div  class=" relative overflow-clip container pt-5 pb-[120px] space-y-5 ">
     <svg class=" absolute top-0 left-0" width="299" height="336" viewBox="0 0 299 336" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="41" cy="78" r="258" fill="#3A44A5"/>
     </svg>
@@ -10,15 +10,6 @@
 
     <div class=" relative">
 
-      <div class=" flex justify-between items-center mb-[42px]">
-        <div class=" h1 text-white ">
-          Привет,
-          <br/>
-          {{ nameP }}
-        </div>
-        
-  
-      </div>
       <div class=" grid   ">
         <div class=" flex justify-between items-center mb-4">
     
@@ -33,7 +24,7 @@
           <div  class=" grid grid-cols-2 laptop:flex  laptop:flex-wrap gap-5">
             <router-link v-if="store.employeesKeys.value?.manager"  :to="{name:'Operator'}" class=" max-w-[160px] bg-white grid gap-2.5 rounded-[10px] overflow-hidden">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
-                <img src="/operator.png" alt="">  
+                <img src="/operator.png" width="1080" height="1080" alt="">
               </div>
               <div  class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
                 <div class=" txt-lg2 font-semibold">
@@ -44,7 +35,7 @@
             </router-link>
             <router-link v-if="store.employeesKeys.value?.accountant" :to="{name:'Buhg'}" class=" max-w-[160px] bg-white grid gap-2.5  rounded-[10px] overflow-hidden">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
-                <img src="/buhg.jpg" alt="">  
+                <img src="/buhg.jpg" width="4096" height="4096" alt="">
               </div>
               <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
                 <div class=" txt-lg2 font-semibold">
@@ -65,7 +56,7 @@
             </router-link> -->
             <div v-if="store.employeesKeys.value?.alihorka"  @click="toChat(store.employeesKeys.value?.alihorka)" class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
-                <img src="/alehorka.jpg" alt="">  
+                <img src="/alehorka.jpg" width="2000" height="2000" alt="">
               </div>
               <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
                 <div class=" txt-lg2 font-semibold">
@@ -76,7 +67,7 @@
             </div>
             <div v-if="store.employeesKeys.value?.reconciliation" @click="toChat(store.employeesKeys.value?.reconciliation)"  class=" max-w-[160px] bg-white  gap-2.5  rounded-[10px] overflow-hidden hidden laptop:grid">
               <div class=" max-h-[169px] rounded-[10px] overflow-hidden" style="box-shadow: 0px 4px 17px 0px #00000033;">
-                <img src="/sverka.jpg" alt="">  
+                <img src="/sverka.jpg" width="2376" height="2210" alt="">
               </div>
               <div class=" text-center grid gap-1.5 justify-center pt-2.5 pb-3 px-3">
                 <div class=" txt-lg2 font-semibold">
@@ -112,7 +103,7 @@
             Активные чаты
           </div>
           <div class=" grid gap-15">
-            <SdelkaItem :chat="value" v-for="value in chats.data"/>
+            <SdelkaItem :chat="value" v-for="value in chats.data" :key="value.uuid"/>
           </div>
         </div>
         
@@ -164,10 +155,6 @@ const startOtherChat = async (uuid: string) => {
     store.load.value = false;
    }
 }
-const nameP = computed(() => {
-  if (store.profile.value) return store.profile.value.name
-  return ''
-})
 const logout = () => {
   const {resetPinOnLogout} = usePinCode()
   cleanTokensData()

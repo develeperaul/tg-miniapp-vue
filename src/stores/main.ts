@@ -9,9 +9,6 @@ import { useOnline } from '@vueuse/core'
 import { type DataVal } from '../models'
 export const useMainStore = defineStore('main', () => {
   const isOnline = useOnline()
-   // Обновляем состояние при изменении сети
-  window.addEventListener('online', () => isOnline.value = true);
-  window.addEventListener('offline', () => isOnline.value = false);
   const route = useRoute();
 
   const load = ref(false);
@@ -48,14 +45,14 @@ export const useMainStore = defineStore('main', () => {
   (val) => {
     
     
-    if (val.hasOwnProperty("type") && employeesKeys.value ) {
+    if (typeof val.type === "string" && employeesKeys.value ) {
       console.log(val.type);
       if (val.type === "message") {
         
       } else if (employeesKeys.value[val.type]) {
         console.log(val.type);
         
-        currentEmpl.value = employeesKeys.value[val.type]
+        currentEmpl.value = employeesKeys.value[val.type] ?? null
       }
       
     }
@@ -64,8 +61,8 @@ export const useMainStore = defineStore('main', () => {
 
 );
   watch(employeesKeys, (v) => {
-    if (v && route.meta && route.meta.hasOwnProperty("type") && route.meta.type !== 'message') {
-      currentEmpl.value = v[route.meta.type]
+    if (v && typeof route.meta.type === 'string' && route.meta.type !== 'message') {
+      currentEmpl.value = v[route.meta.type] ?? null
     }
   
   

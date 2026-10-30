@@ -34,7 +34,7 @@
       <div
         v-for="m in storeChat.messages"
         :key="m.uuid"
-        :data-message-id="m.uuid || m.id"
+        :data-message-id="m.uuid"
         class="flex"
         :class="{ 'justify-end': m.sender.type === 'mini_app' }"
       >
@@ -112,7 +112,7 @@
       <div class="flex items-center gap-2">
         <!-- плюс (кнопка выбрать файл) -->
         <div class="w-[48px] h-[48px] flex items-center justify-center">
-          <FileTile other @fileLoad="handleAttachFile" />
+          <FileTile :capture-slot="`dialog-attachments:${props.uuid}`" other @fileLoad="handleAttachFile" />
         </div>
 
         <!-- поле ввода -->
@@ -129,7 +129,7 @@
         <button
           type="button"
           class="w-10 h-10 rounded-full flex items-center justify-center disabled:bg-gray-300"
-          :disabled="!messageText.trim() && !attachmentTiles.length"
+          :disabled="attachmentTiles.some(f => f.loading) || (!messageText.trim() && !attachmentTiles.length)"
           @click="send"
         >
           <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -153,6 +153,8 @@ import { getMessgs, sendMess } from '../api/chats'
 import { useMainStore } from '../stores/main'
 import { useChatsStore } from '../stores/chats'
 import { uploadFileWithProgress } from '../api/main'
+import { useAttachmentPreview } from '../composables/useAttachmentPreview'
+const attachmentPreview = useAttachmentPreview()
 import dayjs from 'dayjs';
 import { formatDate } from '../utils/date';
 
@@ -177,17 +179,21 @@ const props = defineProps<{
 const storeChat = useChatsStore()
 const mainStore = useMainStore()
 const { profile } = storeToRefs(mainStore)
+let alive = true
 onMounted(async () => {
   await storeChat.setMessgs(props.uuid)
+  if (!alive) return
   const messageId = typeof route.query.messageId === 'string' ? route.query.messageId : null
   if (messageId) {
     await nextTick()
+    if (!alive) return
     Array.from(document.querySelectorAll<HTMLElement>('[data-message-id]'))
       .find((element) => element.dataset.messageId === messageId)
       ?.scrollIntoView({ block: 'center' })
   } else {
     await scrollToBottom()
   }
+  if (!alive) return
   if (backButton.mount.isAvailable()) {
     backButton.mount()
     if (backButton.show.isAvailable()) backButton.show()
@@ -225,14 +231,16 @@ const attachmentTiles = ref<UiFile[]>([])
 let offBack: (() => void) | null = null
 
 onBeforeUnmount(() => {
+  alive = false
   if (backButton.hide.isAvailable()) backButton.hide()
   offBack?.()
 })
-const chatContainer = ref(null)
+const chatContainer = ref<HTMLElement | null>(null)
 const scrollToBottom = async () => {
   
   
   await nextTick()
+  if (!alive) return
   if (chatContainer.value) {
     
     chatContainer.value.scrollTop = chatContainer.value.scrollHeight
@@ -247,6 +255,7 @@ function sse() {
 
   // Слушаем стандартные сообщения
   eventSource.onmessage = async(event: MessageEvent) => {
+    if (!alive) return
     try {
       console.log(event);
       
@@ -255,6 +264,7 @@ function sse() {
       if (rawData !== 'ping') {
 
         await storeChat.setMessgs(props.uuid)
+        if (!alive) return
         await scrollToBottom()
       }
       // const newMessage: ChatMessage = rawData.data || rawData;
@@ -298,13 +308,12 @@ function formatDateTime(iso: string) {
 
 async function handleAttachFile(file: File) {
   const id = crypto.randomUUID()
-  const isImage = file.type.startsWith('image/')
-  const preview = isImage ? URL.createObjectURL(file) : file.name
+  const { preview, noimg } = attachmentPreview.create(file)
 
   const item: UiFile = {
     id,
     preview,
-    noimg: !isImage,
+    noimg,
     loading: true,
     progress: 0
   }
@@ -320,14 +329,16 @@ async function handleAttachFile(file: File) {
     if (target) {
       target.loading = false
       target.serverId = res.uuid
-      if (res.url && isImage) target.preview = res.url
+      // Keep the local preview until this attachment is removed or sent.
     }
   } catch {
+    attachmentPreview.release(preview)
     attachmentTiles.value = attachmentTiles.value.filter(f => f.id !== id)
   }
 }
 
 function deleteAttachment(id: string) {
+  attachmentPreview.release(attachmentTiles.value.find(f => f.id === id)?.preview)
   attachmentTiles.value = attachmentTiles.value.filter(f => f.id !== id)
 }
 
@@ -346,6 +357,7 @@ function deleteAttachment(id: string) {
 // }
 
 const send = async () => {
+  if (attachmentTiles.value.some(f => f.loading)) return
   let text='';
   if (messageText.value) {
     
@@ -363,7 +375,9 @@ const send = async () => {
   } finally {
       mainStore.load= false
     }
+    if (!alive) return
     messageText.value = ''
+    attachmentPreview.clear()
     attachmentTiles.value = []
     storeChat.setMessgs(props.uuid)
 }

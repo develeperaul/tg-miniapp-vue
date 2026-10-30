@@ -4,7 +4,7 @@ import * as Tokens from './tokens'
 
 
 import { useNotifyStore } from '../stores/notifications' // путь к вашему стору
-import router  from "../router"
+import { appRouter } from "../router"
 export class Server {
   mainKy: KyInstance
   
@@ -13,6 +13,14 @@ export class Server {
     option: { prefix: string; timeout?: number | false }
   ) {
     const prefixUrl = url + option.prefix
+    const requestSessions = new WeakMap<Request, { session: string | null; authorization: string | null }>()
+    const belongsToCurrentSession = (request: Request) => {
+      const current = Tokens.getAccessToken()
+      const snapshot = requestSessions.get(request)
+      const authorization = snapshot?.authorization ?? request.headers.get('Authorization')
+      return (!snapshot || snapshot.session === current) &&
+        authorization === (current === null ? null : `Bearer ${current}`)
+    }
     
     this.mainKy = ky.create({
       prefixUrl: prefixUrl,
@@ -22,14 +30,22 @@ export class Server {
           (request) => {
             request.headers.set('X-Requested-With', 'ky')
             const accessToken = Tokens.getAccessToken()
-            if (accessToken !== null)
+            if (accessToken !== null && !request.headers.has('Authorization'))
               request.headers.set('Authorization', 'Bearer ' + accessToken)
+            // Capture the effective credentials, including caller-supplied Authorization.
+            if (!requestSessions.has(request)) {
+              requestSessions.set(request, {
+                session: accessToken,
+                authorization: request.headers.get('Authorization'),
+              })
+            }
           },
         ],
         // Добавляем обработку ответов
         afterResponse: [
           async (_request, _options, response) => {
             if (!response.ok) {
+              if (response.status === 401 && !belongsToCurrentSession(_request)) return
               const notify = useNotifyStore()
               
               // Пытаемся достать сообщение из тела ошибки
@@ -45,10 +61,10 @@ export class Server {
               if (response.status >= 500) {
                 notify.add(errorMessage, 'negative')
               } else if (response.status === 401) {
-                
-                
-                
-                router.push({ name: 'Auth' })
+                // Parsing the response is asynchronous; the account may have changed meanwhile.
+                if (!belongsToCurrentSession(_request)) return
+                Tokens.cleanTokensData()
+                appRouter?.push({ name: 'Auth' })
                 notify.add('Сессия истекла', 'warning')
               } else {
                 notify.add(errorMessage, 'negative')

@@ -1,9 +1,10 @@
+import type { InjectionKey } from 'vue';
 import { onMounted, onUnmounted, ref, provide, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePinCode } from './usePinCode';
 
 // Ключ для provide/inject
-export const IDLE_TIMEOUT_KEY = Symbol('idle-timeout');
+export const IDLE_TIMEOUT_KEY: InjectionKey<{ restartTimer: () => void }> = Symbol('idle-timeout');
 
 export function useIdleTimeout(timeoutMs: number = 15 * 60 * 1000) {
   const { setSessionAuthenticated } = usePinCode();
@@ -44,15 +45,12 @@ export function useIdleTimeout(timeoutMs: number = 15 * 60 * 1000) {
 
   // Публичный метод для перезапуска таймера (например, после возврата с PIN)
   const restartTimer = () => {
-    console.log('restart');
-    
+    isIdleRedirecting.value = false;
     if (idleTimer.value) clearTimeout(idleTimer.value);
     resetTimer();
   };
 
   onMounted(() => {
-    console.log('ssss');
-    
     resetTimer();
     window.addEventListener('mousemove', handleActivity);
     window.addEventListener('keydown', handleActivity);

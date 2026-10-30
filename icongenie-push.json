@@ -1,0 +1,51 @@
+{
+  "params": {
+    "icon": "assets/mobile/push-icon.png",
+    "quality": 7,
+    "padding": [
+      "8%"
+    ]
+  },
+  "assets": [
+    {
+      "generator": "png",
+      "name": "ic_stat_finclub.png",
+      "folder": "src-capacitor/android/app/src/main/res/drawable-mdpi",
+      "sizes": [
+        24
+      ]
+    },
+    {
+      "generator": "png",
+      "name": "ic_stat_finclub.png",
+      "folder": "src-capacitor/android/app/src/main/res/drawable-hdpi",
+      "sizes": [
+        36
+      ]
+    },
+    {
+      "generator": "png",
+      "name": "ic_stat_finclub.png",
+      "folder": "src-capacitor/android/app/src/main/res/drawable-xhdpi",
+      "sizes": [
+        48
+      ]
+    },
+    {
+      "generator": "png",
+      "name": "ic_stat_finclub.png",
+      "folder": "src-capacitor/android/app/src/main/res/drawable-xxhdpi",
+      "sizes": [
+        72
+      ]
+    },
+    {
+      "generator": "png",
+      "name": "ic_stat_finclub.png",
+      "folder": "src-capacitor/android/app/src/main/res/drawable-xxxhdpi",
+      "sizes": [
+        96
+      ]
+    }
+  ]
+}

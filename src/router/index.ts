@@ -1,5 +1,5 @@
 import { defineRouter } from '#q-app'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type Router } from 'vue-router'
 
 import AuthView from '../views/AuthView.vue'
 import HomeView from '../views/HomeView.vue'
@@ -114,11 +114,15 @@ const routes = [
   }
 ]
 
+export let appRouter: Router | undefined
+
 export default defineRouter(() => {
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+appRouter = router
 
 // router/index.ts
 router.beforeEach(async (to, from, next) => {

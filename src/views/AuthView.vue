@@ -15,7 +15,7 @@
               v-bind="field"
               placeholder="Токен"
               class="w-full h-12 rounded-[18px] border px-4 text-sm outline-none"
-              :class="meta.touched && meta.invalid ? 'border-red-500' : 'border-[#28348A]'"
+              :class="meta.touched && !meta.valid ? 'border-red-500' : 'border-[#28348A]'"
             />
           </Field>
           <ErrorMessage
@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import { HTTPError } from 'ky'
 import { ref } from 'vue'
 import { Field, ErrorMessage, useForm } from 'vee-validate'
 import * as yup from 'yup'
@@ -66,9 +67,7 @@ const { handleSubmit, resetForm} = useForm<{
 }>({
   validationSchema: schema,
   initialValues: {
-    amount: null,
-    description: '',
-    files: null
+    token: ''
   }
 })
 
@@ -87,7 +86,7 @@ const onSubmit =  handleSubmit(async values => {
     router.push(redirect);
   }
   catch (e) {
-    if (e?.response?.status === 401) { 
+    if (e instanceof HTTPError && e.response.status === 401) {
       cleanTokensData()
       resetForm()
     }

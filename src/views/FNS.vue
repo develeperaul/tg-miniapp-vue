@@ -9,7 +9,7 @@
         <a v-if="linkFNS" :href=" linkFNS" class=" text-blue-500 underline text-center text-lg  " target="_blank">
            Ссылка для скачивания
          </a>
-         <FileTile title="Прикрепите пожалуйста скан требования и мы выдадим вам ответ" v-else @fileLoad="handleFileLoad" />
+         <FileTile :camera-enabled="false" recovery-sends capture-slot="fns-document" title="Прикрепите пожалуйста скан требования и мы выдадим вам ответ" v-else @fileLoad="handleFileLoad" />
         <div>
           <div class=" h2 mb-15">
             Активные чаты
@@ -110,24 +110,25 @@ async function handleFileLoad(f: File) {
   }
 
   
+  if (!profile.value) return
   load.value = true
   if (profile.value) 
     try {
       const res = await sendFNS(profile.value?.telegram_chat_id, f);
       
       
-      // if (res.data.message.hasOwnProperty('media') && res.data.message.media) {
+      // if (res.data.message.media?.[0]?.url) {
       //   linkFNS.value= res.data.message.media[0]?.url
       // } else {
       //   router.push({ name: 'Dialog', params: {uuid: res.data.uuid}})
       // }
-      if (res.data.message.text === 'Готово!') {
+      if (res.data.message.text === 'Готово!' && res.data.message.media?.[0]?.url) {
         linkFNS.value= res.data.message.media[0]?.url
       } else {
         router.push({ name: 'Dialog', params: {uuid: res.data.uuid}})
       }
     } catch (e) {
-      throw evue
+      throw e
     } finally {
       load.value = false
     }
@@ -142,16 +143,6 @@ async function handleFileLoad(f: File) {
   //   loading: true
   // }
   // file.value =item
-}
-
-function handleDeleteFile(id: string) {
-  files.value = files.value.filter(f => f.id !== id)
-
-  const serverIds = files.value
-    .filter(f => f.serverId)
-    .map(f => f.serverId as string)
-
-  setFieldValue('files', serverIds.length ? serverIds : null)
 }
 
 const send = async (vals: { text: string, images: { uuid: string }[]}) => {

@@ -1,10 +1,10 @@
 <template>
-  <div v-if="shouldShowPrompt" class="notification-prompt">
+  <div v-if="!native && shouldShowPrompt" class="notification-prompt">
     <div class="prompt-content">
       <p class="prompt-text">
         🔔 Разрешите уведомления, чтобы не пропустить сообщения от менеджера.
       </p>
-      
+
       <!-- Специальное сообщение для iOS без PWA -->
       <div v-if="isIOS && !isStandalone" class="ios-message">
         <p>📱 На iPhone/iPad:</p>
@@ -14,7 +14,7 @@
           <li>Откройте приложение с главного экрана</li>
         </ol>
       </div>
-      
+
       <div class="prompt-actions">
         <button
           @click="handleAllow"
@@ -39,6 +39,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { requestNotificationPermission } from '../composables/useFirebaseMessaging';
 
+import { isNativeApp } from '../utils/native';
+const native = isNativeApp();
+
 const DISMISSED_KEY = 'notification_prompt_dismissed';
 
 const isLoading = ref(false);
@@ -49,8 +52,8 @@ const isSafari = computed(() => {
   if (typeof navigator === 'undefined') return false;
   const ua = navigator.userAgent;
   const vendor = navigator.vendor || '';
-  return ua.includes('Safari') && 
-         !ua.includes('Chrome') && 
+  return ua.includes('Safari') &&
+         !ua.includes('Chrome') &&
          !ua.includes('Chromium') &&
          vendor.includes('Apple');
 });
@@ -59,14 +62,14 @@ const isSafari = computed(() => {
 const isIOS = computed(() => {
   if (typeof navigator === 'undefined') return false;
   const ua = navigator.userAgent;
-  return /iPad|iPhone|iPod/.test(ua) || 
+  return /iPad|iPhone|iPod/.test(ua) ||
          (ua.includes('Mac') && 'ontouchend' in document);
 });
 
 // Определяем, установлено ли приложение как PWA
 const isStandalone = computed(() => {
   if (typeof window === 'undefined') return false;
-  return window.navigator.standalone || 
+  return (window.navigator as Navigator & { standalone?: boolean }).standalone ||
          window.matchMedia('(display-mode: standalone)').matches;
 });
 
@@ -96,26 +99,26 @@ const getButtonText = () => {
 onMounted(() => {
   const val = localStorage.getItem(DISMISSED_KEY);
   dismissed.value = val === 'true';
-  
+
   console.log('📱 Состояние:', {
     isIOS: isIOS.value,
     isStandalone: isStandalone.value,
-    permission: Notification.permission,
+    permission: typeof Notification === 'undefined' ? 'unsupported' : Notification.permission,
     showPrompt: shouldShowPrompt.value
   });
 });
 
 const handleAllow = async () => {
   // Для iOS без PWA - просто показываем инструкцию, кнопка disabled
-  if (isIOS.value && !isStandalone.value) {
+  if (!native && isIOS.value && !isStandalone.value) {
     return;
   }
-  
+
   isLoading.value = true;
   try {
     const success = await requestNotificationPermission();
-    
-    
+
+
     if (success) {
       console.log('✅ Уведомления включены');
       setTimeout(() => window.location.reload(), 500);
@@ -125,6 +128,8 @@ const handleAllow = async () => {
     }
   } catch (error) {
     console.error('❌ Ошибка:', error);
+    isLoading.value = false;
+  } finally {
     isLoading.value = false;
   }
 };

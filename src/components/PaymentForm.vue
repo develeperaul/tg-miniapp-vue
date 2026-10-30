@@ -16,7 +16,7 @@
           type="number"
           placeholder="Сумма"
           class="w-full h-12 rounded-[18px] border px-4 text-sm outline-none"
-          :class="meta.touched && meta.invalid ? 'border-red-500' : 'border-[#28348A]'"
+          :class="meta.touched && !meta.valid ? 'border-red-500' : 'border-[#28348A]'"
         />
       </Field>
       <ErrorMessage
@@ -33,7 +33,7 @@
           rows="4"
           placeholder="За что оплата"
           class="w-full rounded-[18px] border px-4 py-3 text-sm outline-none resize-none"
-          :class="meta.touched && meta.invalid ? 'border-red-500' : 'border-[#28348A]'"
+          :class="meta.touched && !meta.valid ? 'border-red-500' : 'border-[#28348A]'"
         />
       </Field>
       <ErrorMessage
@@ -61,7 +61,7 @@
         @deleteFile="handleDeleteFile"
       />
       <!-- кнопка добавить -->
-      <FileTile @fileLoad="handleFileLoad" />
+      <FileTile capture-slot="payment-attachments" @fileLoad="handleFileLoad" />
     </div>
     <ErrorMessage
       name="files"
@@ -72,7 +72,7 @@
     <button
       type="submit"
       class="w-full h-12 rounded-[999px] bg-[#242F9B] text-white font-bold text-sm  mt-4"
-      :disabled="submitting"
+      :disabled="submitting || files.some(f => f.loading)"
     >
       {{ submitting ? 'Отправка…' : 'Отправить' }}
     </button>
@@ -85,6 +85,8 @@ import { Field, ErrorMessage, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import FileTile from './FileTile.vue' // проверь, что именно ТАК называется файл
 import { uploadFileWithProgress } from '../api/main'
+import { useAttachmentPreview } from '../composables/useAttachmentPreview'
+const attachmentPreview = useAttachmentPreview()
 
 type UiFile = {
   id: string
@@ -166,13 +168,12 @@ async function handleFileLoad(file: File) {
   setFieldError('files', '')
 
   const id = crypto.randomUUID()
-  const isImage = file.type.startsWith('image/')
-  const preview = isImage ? URL.createObjectURL(file) : file.name
+  const { preview, noimg } = attachmentPreview.create(file)
 
   const item: UiFile = {
     id,
     preview,
-    noimg: !isImage,
+    noimg,
     loading: true,
     progress: 0
   }
@@ -188,9 +189,7 @@ async function handleFileLoad(file: File) {
     if (target) {
       target.loading = false
       target.serverId = res.uuid
-      if (res.url && isImage) {
-        target.preview = res.url
-      }
+      // Keep the local preview: temporary server URLs can require private access.
     }
 
     const serverIds = files.value
@@ -199,11 +198,14 @@ async function handleFileLoad(file: File) {
 
     setFieldValue('files', serverIds.length ? serverIds : null)
   } catch (e) {
+    setFieldError('files', 'Не удалось загрузить файл. Попробуйте ещё раз.')
+    attachmentPreview.release(preview)
     files.value = files.value.filter(f => f.id !== id)
   }
 }
 
 function handleDeleteFile(id: string) {
+  attachmentPreview.release(files.value.find(f => f.id === id)?.preview)
   files.value = files.value.filter(f => f.id !== id)
 
   const serverIds = files.value
@@ -215,6 +217,7 @@ function handleDeleteFile(id: string) {
 
 // сабмит
 const onSubmit = handleSubmit(values => {
+  if (files.value.some(f => f.loading)) return
   submitting.value = true
   const text = values.amount + " " + values.description
   console.log(values);

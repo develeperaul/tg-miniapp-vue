@@ -14,9 +14,18 @@ export const useChatsStore = defineStore('chats', () => {
   }
 
   const messages = ref<MessageT[]>([])
+  let messageRequest = 0
+  let activeChat = ''
   const setMessgs = async (chat_uuid: string) => {
+    const request = ++messageRequest
+    if (activeChat !== chat_uuid) {
+      activeChat = chat_uuid
+      messages.value = []
+    }
     try {
-     messages.value =  (await getMessgs(chat_uuid)).data
+      const result = await getMessgs(chat_uuid)
+      // A late response from the previously open chat must not replace the push destination.
+      if (request === messageRequest) messages.value = result.data
     } catch (e) {
       throw e
     }

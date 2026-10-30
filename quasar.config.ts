@@ -4,7 +4,20 @@
 import { defineConfig } from '#q-app';
 
 export default defineConfig((/* ctx */) => {
+  const apiOrigin = import.meta.env.VITE_API_URL
+    ? new URL(String(import.meta.env.VITE_API_URL)).origin
+    : '';
+  if (apiOrigin && !/^https?:\/\//.test(apiOrigin)) {
+    throw new Error('VITE_API_URL must use HTTP or HTTPS');
+  }
+  if (/[\s"'<>`;]/.test(apiOrigin)) {
+    throw new Error('VITE_API_URL contains unsafe origin delimiters');
+  }
+  const apiOriginHtml = apiOrigin.replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]!);
   return {
+    htmlVariables: { apiOrigin: apiOriginHtml },
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 

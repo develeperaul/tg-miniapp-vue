@@ -1,5 +1,6 @@
 <template>
   <nav
+    ref="nav"
     class=" pt-[30px] pb-6 bg-white/95 backdrop-blur rounded-t-2xl  flex items-center justify-between container"
     style=" box-shadow: 0px -2px 15px 0px #00000033;
 "
@@ -75,9 +76,19 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const isActive = (path: string) => route.path === path
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+const nav = ref<HTMLElement | null>(null)
+const emit = defineEmits<{ (e: 'height-change', height: number): void }>()
+let observer: ResizeObserver | undefined
+const measure = () => {
+  if (nav.value) emit('height-change', Math.ceil(nav.value.getBoundingClientRect().height))
+}
+onMounted(() => {
+  measure()
+  observer = new ResizeObserver(measure)
+  if (nav.value) observer.observe(nav.value)
+})
+onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <style scoped>

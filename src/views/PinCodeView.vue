@@ -20,28 +20,26 @@ const mode = computed(() => {
   return (route.query.mode as 'force' | 'setup' | 'enter') || 'enter';
 });
 
+function internalDestination(value: unknown): string | null {
+  if (typeof value !== 'string' || !value.startsWith('/')) return null;
+  try {
+    const base = new URL(window.location.href || window.location.origin);
+    const url = new URL(value, base);
+    const routePath = url.pathname.replace(/\/+$/, '').toLowerCase();
+    if (url.protocol !== base.protocol || url.host !== base.host || ['/pin', '/auth'].includes(routePath)) return null;
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch { return null; }
+}
+
 const handleSuccess = () => {
-  const redirectPath = sessionStorage.getItem('redirectAfterPin');
-  const queryRedirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/')
-    ? route.query.redirect
-    : null;
-  const destination = redirectPath && redirectPath !== '/pin'
-    ? redirectPath
-    : queryRedirect;
-   
-  if (destination) {
-    sessionStorage.removeItem('redirectAfterPin');
-    router.push(destination).then(() => {
-      // После возврата на страницу перезапускаем таймер
-      idleTimeout?.restartTimer();
-    });
-  } else {
-    router.push('/').then(() => {
-      idleTimeout?.restartTimer();
-    }); // или другой путь по умолчанию
-  }
-  // const redirect = route.query.redirect as string || '/';
-  // router.push(redirect);
+  // A newly tapped notification wins over the page saved by an older idle lock.
+  const destination = internalDestination(route.query.redirect)
+    ?? internalDestination(sessionStorage.getItem('redirectAfterPin'))
+    ?? '/';
+  sessionStorage.removeItem('redirectAfterPin');
+  router.push(destination).then(() => {
+    idleTimeout?.restartTimer();
+  });
 };
 </script>
 

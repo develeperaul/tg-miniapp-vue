@@ -1,0 +1,16 @@
+{
+  "params": {
+    "include": [
+      "spa",
+      "capacitor"
+    ],
+    "icon": "assets/mobile/app-icon.png",
+    "quality": 7,
+    "padding": [
+      "12%"
+    ],
+    "pngColor": "242F9B",
+    "splashscreenColor": "242F9B",
+    "iconMonochrome": "assets/mobile/push-icon.png"
+  }
+}

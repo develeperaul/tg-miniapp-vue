@@ -42,6 +42,26 @@ dist-ssr
 # Capacitor related directories and files
 /src-capacitor/www
 /src-capacitor/node_modules
+/src-capacitor/android/.gradle
+/src-capacitor/android/build
+/src-capacitor/android/app/build
+/src-capacitor/android/local.properties
+/src-capacitor/android/app/google-services.json
+/src-capacitor/ios/App/App/GoogleService-Info.plist
+/src-capacitor/ios/App/Pods
+/src-capacitor/ios/App/build
+/src-capacitor/ios/App/CapApp-SPM/symlinks/
+**/xcuserdata/
+*.keystore
+*.jks
 # Log files
 .quasar/
 _quasar-seed/
+
+# Safe environment template
+!.env.example
+# Private Android upload signing settings
+**/upload.properties
+**/keystore.properties
+**/signing.properties
+**/auth-token.txt

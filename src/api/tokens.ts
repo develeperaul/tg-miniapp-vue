@@ -5,10 +5,10 @@ function setTokensData(token: string, expires: number) {
   const expiresAt = Date.now() + (60 * 24 * 60 * 60 * 1000); 
   storage.setItem('expiresIn', String(expiresAt));
   storage.setItem('token', token)
+  window.dispatchEvent(new Event('auth-token-changed'))
 }
 
 function getAccessToken() {
-  // return '1|u7O0WdOacWHZlZdgjfMeivEJphD5MGUB2fKIQLit9f09139f'
   const token = storage.getItem('token')
   if (isTokenExpired()) return null
   return token
@@ -29,6 +29,7 @@ function isTokenExpired() {
 function cleanTokensData() {
   storage.removeItem('token')
   storage.removeItem('expiresIn')
+  window.dispatchEvent(new Event('auth-token-changed'))
 }
 
 export { setTokensData, getAccessToken, cleanTokensData, isTokenExpired }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FinClub Online</string>
+    <string name="title_activity_main">FinClub Online</string>
+    <string name="package_name">ru.finclubonline</string>
+    <string name="custom_url_scheme">ru.finclubonline</string>
+</resources>

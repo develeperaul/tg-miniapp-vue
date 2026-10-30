@@ -6,11 +6,12 @@ import { api } from './index'
 import * as Tokens from './tokens'
 
 export const setFRB =  (
-  token: string
+  token: string,
+  options: { signal?: AbortSignal; headers?: Record<string, string> } = {}
 ) => {
   const body = new FormData()
   body.append('token', token)
-  return api.mainKy.post('firebase/token', { body }).json()
+  return api.mainKy.post('firebase/token', { body, timeout: 15000, ...options }).json()
 }
 
 export const uploadFile = (
@@ -38,14 +39,25 @@ export const uploadFileWithProgress = (
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(JSON.parse(xhr.responseText))
+        try {
+          const result = JSON.parse(xhr.responseText)
+          if (!result?.data?.uuid || typeof result.data.uuid !== 'string') {
+            throw new Error('Invalid upload response')
+          }
+          resolve(result)
+        } catch {
+          reject(new Error('Invalid upload response'))
+        }
       } else {
         reject(new Error(`Upload failed with status ${xhr.status}`))
       }
     }
 
     xhr.onerror = () => reject(new Error('Upload failed'))
+    xhr.ontimeout = () => reject(new Error('Upload timed out'))
+    xhr.onabort = () => reject(new Error('Upload cancelled'))
     xhr.open('POST', import.meta.env.VITE_API_URL + '/api/temp-media')
+    xhr.timeout = 60000
     xhr.setRequestHeader('Authorization', 'Bearer ' + Tokens.getAccessToken())
     xhr.send(formData)
   })
