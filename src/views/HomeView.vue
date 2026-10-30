@@ -108,9 +108,14 @@
         </div>
         
       </div>
-      <div @click="logout" class=" mx-auto laptop:max-w-fit px-5 mt-3 text-white border h-10 flex items-center justify-center border-white text-lg  rounded-full hover:text-black hover:bg-white">
+      <div class="mt-3 grid grid-cols-2 gap-3">
+        <button type="button" @click="logout" class="px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full hover:text-black hover:bg-white">
           Выйти
-        </div>
+        </button>
+        <button type="button" @click="logout" class="px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full hover:text-black hover:bg-white">
+          Удалить аккаунт
+        </button>
+      </div>
     </div>
     
   </div>
