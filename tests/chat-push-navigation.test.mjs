@@ -7,12 +7,12 @@ import * as vue from 'vue'
 import * as pinia from 'pinia'
 
 // Real store + Vue refs + Pinia; only the API transport is deferred.
-function harness() {
+function harness(getChats = async () => ({ data: [] })) {
   const requests = []
   const mocks = {
     vue, pinia,
     '../api/chats': {
-      getChats: async () => ({ data: [] }),
+      getChats,
       getMessgs: chat => new Promise((resolve, reject) => {
         requests.push({ chat, resolve: data => resolve({ data }), reject })
       }),
@@ -253,4 +253,26 @@ test('failure of obsolete A does not clear B or prevent subsequent refresh', asy
   h.requests[2].resolve(rows('B-refreshed'))
   await refresh
   assert.deepEqual(h.ids(), ['B-refreshed'])
+})
+
+ test('chat list refresh keeps newest result when older request finishes last', async () => {
+  const pending = []
+  const { store } = harness(() => new Promise(resolve => pending.push(resolve)))
+  const first = store.setChats()
+  const second = store.setChats()
+  assert.equal(store.chats.loading, true)
+  pending[1]({ data: [{ uuid: 'new-chat' }] })
+  await second
+  pending[0]({ data: [] })
+  await first
+  assert.equal(store.chats.data[0].uuid, 'new-chat')
+  assert.equal(store.chats.loading, false)
+})
+
+test('chat list refresh failure preserves loaded chats and releases loading', async () => {
+  const { store } = harness(async () => { throw new Error('offline') })
+  store.chats.data = [{ uuid: 'cached-chat' }]
+  await assert.rejects(store.setChats(), /offline/)
+  assert.equal(store.chats.data[0].uuid, 'cached-chat')
+  assert.equal(store.chats.loading, false)
 })

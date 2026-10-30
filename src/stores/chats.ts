@@ -5,11 +5,17 @@ import type { ChatT, MessageT } from '../models/api'
 import type { DataVal } from '../models'
 export const useChatsStore = defineStore('chats', () => {
   const chats = ref<DataVal<ChatT[]>>({ loading: false, data: [] })
+  let chatRequest = 0
   const setChats = async () => {
+    const request = ++chatRequest
+    chats.value.loading = true
     try {
-      chats.value.data  = (await getChats()).data
+      const result = await getChats()
+      if (request === chatRequest) chats.value.data = result.data
     } catch (e) {
       throw e
+    } finally {
+      if (request === chatRequest) chats.value.loading = false
     }
   }
 
