@@ -4,7 +4,7 @@
 
   </div>
   <div v-if="useMainStore().isOnline" class="min-h-screen flex flex-col bg-primary" :style="{ '--footer-nav-height': `${footerHeight}px` }">
-    <main class="flex-1 ">
+    <main class="app-content flex-1">
       <!-- <FullScreenLoader :loading="load"/> -->
       <RouterView :key="route.name === 'Dialog' ? String(route.params.uuid) : 'page'" />
     </main>
@@ -93,3 +93,11 @@ provide(IDLE_TIMEOUT_KEY, idleTimeout);
 
 
 </script>
+
+<style scoped>
+.app-content {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+</style>

@@ -55,7 +55,7 @@ const routes = [
     component: MainLayout, 
     meta: { type: 'manager', auth: true, requiresPin: true }, 
     children: [
-      { path: '/', name: 'Operator', component: OperatorView },
+      { path: '', name: 'Operator', component: OperatorView },
       { path: 'create', name: 'Order', component: CreateOrderView },
     ] 
   },
