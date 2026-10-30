@@ -109,10 +109,10 @@
         
       </div>
       <div class="mt-3 grid grid-cols-2 gap-3">
-        <button type="button" @click="logout" class="px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full hover:text-black hover:bg-white">
+        <button type="button" @click="logout" class="account-action px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full">
           Выйти
         </button>
-        <button type="button" @click="logout" class="px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full hover:text-black hover:bg-white">
+        <button type="button" @click="logout" class="account-action px-3 text-white border min-h-10 py-2 flex items-center justify-center border-white text-sm rounded-full">
           Удалить аккаунт
         </button>
       </div>
@@ -204,3 +204,23 @@ onMounted(async () => {
 })
   
 </script>
+
+<style scoped>
+.account-action {
+  color: #fff;
+  background: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.account-action:hover,
+.account-action:active {
+  color: #fff;
+  background: transparent;
+}
+.account-action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+</style>
