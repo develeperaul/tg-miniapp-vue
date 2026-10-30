@@ -12,7 +12,7 @@
            Ссылка для скачивания
          </a>
          <FileTile :camera-enabled="false" recovery-sends capture-slot="signature-document" v-else @fileLoad="handleFileLoad" />
-        <div>
+        <div v-if="chats.data?.length">
           <div class=" h2 mb-15">
             Активные чаты
           </div>

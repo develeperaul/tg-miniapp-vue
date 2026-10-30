@@ -5,7 +5,7 @@
       <div class=" grid   gap-5">
         
         <DocsForm btntitle="Отправить"  @send="send"/>
-        <div>
+        <div v-if="chats.data?.length">
           <div class=" h2 mb-15">
             Активные чаты
           </div>

@@ -98,7 +98,7 @@
           </div>
 
         </div>
-        <div class=" mt-5">
+        <div v-if="chats.data?.length" class=" mt-5">
           <div class=" h2 text-white mb-15">
             Активные чаты
           </div>

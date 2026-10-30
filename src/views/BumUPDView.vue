@@ -31,7 +31,7 @@
   
           
         </div>
-        <div>
+        <div v-if="chats.data?.length">
           <div class=" h2 mb-15">
             Активные чаты
           </div>
