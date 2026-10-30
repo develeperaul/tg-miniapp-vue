@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="nav"
-    class="footer-nav pt-[30px] pb-6 bg-white/95 backdrop-blur rounded-t-2xl flex items-center justify-between container"
+    class="footer-nav bg-white/95 backdrop-blur rounded-t-2xl flex items-center justify-between container"
     style=" box-shadow: 0px -2px 15px 0px #00000033;
 "
   >
@@ -93,9 +93,10 @@ onBeforeUnmount(() => observer?.disconnect())
 
 <style scoped>
 .footer-nav {
+  padding-top: 12px;
   padding-left: max(24px, env(safe-area-inset-left, 0px));
   padding-right: max(24px, env(safe-area-inset-right, 0px));
-  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
   gap: 8px;
 }
 .footer-nav > a {

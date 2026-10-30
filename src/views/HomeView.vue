@@ -1,6 +1,6 @@
 <template>
   
-  <div  class=" relative overflow-clip container pt-5 pb-[120px] space-y-5 ">
+  <div class="home-page relative overflow-clip container pt-5 space-y-5">
     <svg class=" absolute top-0 left-0" width="299" height="336" viewBox="0 0 299 336" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="41" cy="78" r="258" fill="#3A44A5"/>
     </svg>
@@ -199,3 +199,9 @@ onMounted(async () => {
 })
   
 </script>
+
+<style scoped>
+.home-page {
+  padding-bottom: calc(var(--footer-nav-height, 120px) + 16px);
+}
+</style>
