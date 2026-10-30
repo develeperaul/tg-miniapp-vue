@@ -1,5 +1,5 @@
 <template>
-  <router-view class="env-t env-b" :class="{ 'footer-clearance': route.name === 'Operator' || route.name === 'Buhg' }" />
+  <router-view />
 </template>
 
 <script setup lang="ts">
@@ -21,9 +21,3 @@ watch(() => route.fullPath, async () => {
   }
 }, { immediate: true })
 </script>
-
-<style scoped>
-.footer-clearance {
-  padding-bottom: calc(var(--footer-nav-height, 120px) + 10px);
-}
-</style>

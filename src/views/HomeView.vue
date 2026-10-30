@@ -199,9 +199,3 @@ onMounted(async () => {
 })
   
 </script>
-
-<style scoped>
-.home-page {
-  padding-bottom: calc(var(--footer-nav-height, 120px) + 16px);
-}
-</style>

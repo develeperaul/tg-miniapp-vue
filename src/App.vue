@@ -4,7 +4,7 @@
 
   </div>
   <div v-if="useMainStore().isOnline" class="min-h-screen flex flex-col bg-primary" :style="{ '--footer-nav-height': `${footerHeight}px` }">
-    <main class="app-content flex-1">
+    <main class="app-content flex-1" :class="{ 'with-footer': route.name !== 'Auth' && route.name !== 'PinCode' }">
       <!-- <FullScreenLoader :loading="load"/> -->
       <RouterView :key="route.name === 'Dialog' ? String(route.params.uuid) : 'page'" />
     </main>
@@ -99,5 +99,8 @@ provide(IDLE_TIMEOUT_KEY, idleTimeout);
   padding-top: env(safe-area-inset-top, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
+}
+.app-content.with-footer {
+  padding-bottom: calc(var(--footer-nav-height, 120px) + 32px);
 }
 </style>
